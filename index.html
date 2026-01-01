@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stilte – Meditatie</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='16' cy='16' r='12' fill='%23f0fdf4' stroke='%2310b981' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='4' fill='%2310b981'/%3E%3C/svg%3E">
+    <title>Hier & Nu – 5-4-3-2-1 oefening</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='16' cy='16' r='14' fill='%23f0fdf4' stroke='%2310b981' stroke-width='2'/%3E%3Crect x='11' y='10' width='3' height='12' rx='1' fill='%2310b981'/%3E%3Crect x='18' y='10' width='3' height='12' rx='1' fill='%2310b981'/%3E%3C/svg%3E">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -33,44 +33,31 @@
             font-family: 'DM Sans', system-ui, sans-serif;
             background: var(--slate-50);
             color: var(--slate-700);
+            line-height: 1.6;
             min-height: 100vh;
             -webkit-font-smoothing: antialiased;
-            overflow: hidden;
-            transition: background 1s ease;
-        }
-
-        body.meditating {
-            background: var(--slate-800);
         }
 
         /* Header */
         .header {
+            background: var(--white);
+            border-bottom: 1px solid var(--slate-200);
             padding: 1.25rem 2rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-            transition: opacity 0.5s;
-        }
-
-        body.meditating .header {
-            opacity: 0;
-            pointer-events: none;
         }
 
         .header-content {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: 1rem;
         }
 
         .logo {
-            width: 36px;
-            height: 36px;
+            width: 44px;
+            height: 44px;
+            flex-shrink: 0;
         }
 
         .logo svg {
@@ -78,1088 +65,1374 @@
             height: 100%;
         }
 
-        .header h1 {
-            font-size: 1.125rem;
+        .header-text h1 {
+            font-size: 1.25rem;
             font-weight: 700;
             color: var(--slate-800);
+            letter-spacing: -0.02em;
+        }
+
+        .header-text p {
+            font-size: 0.8125rem;
+            color: var(--slate-500);
         }
 
         /* Main */
         .main {
+            max-width: 560px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Card */
+        .card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            border: 1.5px solid var(--slate-200);
+            box-shadow: 0 4px 24px rgba(0,0,0,0.03);
+        }
+
+        /* Intro */
+        .intro {
+            text-align: center;
+            padding: 1rem 0 1.5rem;
+        }
+
+        .intro h2 {
+            font-size: 1.625rem;
+            font-weight: 700;
+            color: var(--slate-800);
+            margin-bottom: 0.75rem;
+        }
+
+        .intro p {
+            color: var(--slate-500);
+            max-width: 380px;
+            margin: 0 auto 2rem;
+            line-height: 1.6;
+        }
+
+        /* Progress indicator */
+        .progress-steps {
             display: flex;
-            flex-direction: column;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .progress-step {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--slate-100);
+            border: 2px solid var(--slate-200);
+            display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
-            padding: 1.5rem;
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--slate-400);
+            transition: all 0.3s;
         }
 
-        /* Views */
-        .view {
+        .progress-step.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: var(--white);
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .progress-step.done {
+            background: var(--accent-light);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* Step view */
+        .step-view {
             display: none;
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
         }
 
-        .view.active {
+        .step-view.active {
             display: block;
-            animation: fadeIn 0.6s ease;
+            animation: fadeIn 0.4s ease;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        /* Ambient selection */
-        .ambient-row {
+        /* Sense icon */
+        .sense-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--accent-light);
+            border-radius: 50%;
             display: flex;
-            justify-content: center;
-            gap: 0.75rem;
-            margin-bottom: 2.5rem;
-        }
-
-        .ambient-btn {
-            width: 72px;
-            height: 72px;
-            background: var(--white);
-            border: 2px solid var(--slate-200);
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 0.25rem;
+            margin: 0 auto 1.5rem;
         }
 
-        .ambient-btn:hover {
+        .sense-icon svg {
+            width: 36px;
+            height: 36px;
+            color: var(--accent);
+        }
+
+        /* Step header */
+        .step-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .step-count {
+            font-size: 0.6875rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--slate-800);
+            margin-bottom: 0.375rem;
+        }
+
+        .step-subtitle {
+            font-size: 0.9375rem;
+            color: var(--slate-500);
+        }
+
+        /* Chip grid */
+        .chip-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .chip {
+            width: 48px;
+            height: 48px;
+            background: var(--white);
+            border: 1.5px solid var(--slate-200);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s;
+            user-select: none;
+            position: relative;
+        }
+
+        .chip svg {
+            width: 24px;
+            height: 24px;
+            color: var(--accent);
+            transition: all 0.15s;
+        }
+
+        .chip:hover {
             border-color: var(--accent);
             background: var(--accent-light);
         }
 
-        .ambient-btn.selected {
+        .chip.selected {
+            background: var(--accent);
             border-color: var(--accent);
-            background: var(--accent);
         }
 
-        .ambient-btn svg {
-            width: 28px;
-            height: 28px;
-            color: var(--slate-500);
-            transition: all 0.2s;
-        }
-
-        .ambient-btn:hover svg {
-            color: var(--accent);
-        }
-
-        .ambient-btn.selected svg {
+        .chip.selected svg {
             color: var(--white);
         }
 
-        /* Duration slider */
-        .duration-container {
-            margin-bottom: 2.5rem;
+        .chip.other {
+            border-style: dashed;
         }
 
-        .duration-display {
-            font-size: 4rem;
-            font-weight: 700;
-            color: var(--slate-800);
-            line-height: 1;
-            margin-bottom: 0.5rem;
-        }
-
-        .duration-display span {
-            font-size: 1.25rem;
-            font-weight: 500;
-            color: var(--slate-400);
-        }
-
-        .duration-slider {
-            width: 100%;
-            max-width: 280px;
-            height: 8px;
-            -webkit-appearance: none;
-            appearance: none;
-            background: var(--slate-200);
-            border-radius: 4px;
-            outline: none;
-            cursor: pointer;
-        }
-
-        .duration-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 28px;
-            height: 28px;
-            background: var(--accent);
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
-            transition: transform 0.2s;
-        }
-
-        .duration-slider::-webkit-slider-thumb:hover {
-            transform: scale(1.1);
-        }
-
-        .duration-slider::-moz-range-thumb {
-            width: 28px;
-            height: 28px;
-            background: var(--accent);
-            border-radius: 50%;
-            cursor: pointer;
-            border: none;
-            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
-        }
-
-        /* Start button */
-        .start-btn {
-            width: 100px;
-            height: 100px;
-            background: var(--accent);
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-            box-shadow: 0 8px 32px rgba(16, 185, 129, 0.3);
-        }
-
-        .start-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 12px 40px rgba(16, 185, 129, 0.4);
-        }
-
-        .start-btn svg {
-            width: 40px;
-            height: 40px;
-            color: var(--white);
-        }
-
-        /* Meditation view */
-        #meditationView {
-            max-width: none;
-            position: fixed;
-            inset: 0;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        #meditationView.active {
-            display: flex;
-        }
-
-        /* Focus orb */
-        .orb-container {
-            position: relative;
-            width: 200px;
-            height: 200px;
-            margin-bottom: 3rem;
-        }
-
-        .orb {
+        /* Tooltip */
+        .chip::after {
+            content: attr(title);
             position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at 35% 35%, 
-                rgba(16, 185, 129, 0.8), 
-                rgba(16, 185, 129, 0.4) 40%,
-                rgba(16, 185, 129, 0.1) 70%,
-                transparent);
-            border-radius: 50%;
-            animation: pulse 8s ease-in-out infinite;
-            filter: blur(1px);
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--slate-800);
+            color: var(--white);
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 0.375rem 0.625rem;
+            border-radius: 6px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.15s;
+            pointer-events: none;
+            z-index: 10;
         }
 
-        .orb::before {
+        .chip::before {
             content: '';
             position: absolute;
-            inset: 20%;
-            background: radial-gradient(circle at 40% 40%, 
-                rgba(255, 255, 255, 0.9),
-                rgba(16, 185, 129, 0.6) 50%,
-                transparent);
-            border-radius: 50%;
-            filter: blur(2px);
-        }
-
-        .orb-glow {
-            position: absolute;
-            inset: -30px;
-            background: radial-gradient(circle, 
-                rgba(16, 185, 129, 0.15) 0%,
-                transparent 70%);
-            border-radius: 50%;
-            animation: glowPulse 8s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.9; }
-            50% { transform: scale(1.08); opacity: 1; }
-        }
-
-        @keyframes glowPulse {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.2); opacity: 0.8; }
-        }
-
-        /* Timer */
-        .timer {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.6);
-            font-variant-numeric: tabular-nums;
-            margin-bottom: 3rem;
-            transition: opacity 0.3s;
-        }
-
-        .timer.hidden {
+            bottom: calc(100% + 2px);
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: var(--slate-800);
             opacity: 0;
+            visibility: hidden;
+            transition: all 0.15s;
+            pointer-events: none;
+            z-index: 10;
         }
 
-        /* Controls */
-        .med-controls {
+        .chip:hover::after,
+        .chip:hover::before,
+        .chip.selected::after,
+        .chip.selected::before {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Selection counter */
+        .selection-counter {
+            text-align: center;
+            font-size: 0.875rem;
+            color: var(--slate-500);
+            margin-bottom: 1.5rem;
+        }
+
+        .selection-counter span {
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        /* Drawing modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-overlay.active {
             display: flex;
-            gap: 1rem;
         }
 
-        .med-btn {
-            width: 56px;
-            height: 56px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
+        .modal {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 1.5rem;
+            width: 100%;
+            max-width: 320px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .modal-title {
+            font-weight: 700;
+            color: var(--slate-800);
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: var(--slate-100);
+            border-radius: 8px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
-            backdrop-filter: blur(10px);
+            color: var(--slate-500);
         }
 
-        .med-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: rgba(255, 255, 255, 0.3);
+        .modal-close:hover {
+            background: var(--slate-200);
         }
 
-        .med-btn svg {
-            width: 24px;
-            height: 24px;
-            color: rgba(255, 255, 255, 0.8);
+        .canvas-container {
+            background: var(--slate-50);
+            border-radius: 12px;
+            border: 1.5px solid var(--slate-200);
+            overflow: hidden;
+            margin-bottom: 1rem;
+            touch-action: none;
         }
 
-        .med-btn.primary {
-            width: 64px;
-            height: 64px;
-            background: var(--accent);
-            border-color: var(--accent);
+        .drawing-canvas {
+            display: block;
+            width: 100%;
+            height: 200px;
+            cursor: crosshair;
         }
 
-        .med-btn.primary:hover {
-            background: var(--accent-dark);
-            border-color: var(--accent-dark);
-        }
-
-        .med-btn.primary svg {
-            color: var(--white);
-            width: 28px;
-            height: 28px;
-        }
-
-        /* Progress ring around orb */
-        .progress-ring {
-            position: absolute;
-            inset: -15px;
-            transform: rotate(-90deg);
-        }
-
-        .progress-ring circle {
-            fill: none;
-            stroke-width: 3;
-        }
-
-        .progress-ring .bg {
-            stroke: rgba(255, 255, 255, 0.1);
-        }
-
-        .progress-ring .progress {
-            stroke: var(--accent);
-            stroke-linecap: round;
-            transition: stroke-dashoffset 1s linear;
-            opacity: 0.6;
-        }
-
-        /* Complete view */
-        .complete-orb {
-            width: 120px;
-            height: 120px;
-            background: var(--accent);
-            border-radius: 50%;
+        .modal-actions {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 2rem;
-            animation: completeIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 12px 40px rgba(16, 185, 129, 0.3);
+            gap: 0.5rem;
         }
 
-        @keyframes completeIn {
-            from { transform: scale(0); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
+        .modal-actions .btn {
+            flex: 1;
+            padding: 0.75rem;
         }
 
-        .complete-orb svg {
-            width: 56px;
-            height: 56px;
-            color: var(--white);
+        /* Custom drawings in summary */
+        .drawing-thumb {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            background: var(--slate-100);
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 0.25rem;
         }
 
-        .complete-stats {
-            display: flex;
-            justify-content: center;
-            gap: 3rem;
-            margin-bottom: 2rem;
-        }
-
-        .complete-stat {
-            text-align: center;
-        }
-
-        .complete-stat-value {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--accent);
-            line-height: 1;
-        }
-
-        .complete-stat-icon {
-            width: 28px;
-            height: 28px;
-            color: var(--slate-400);
-            margin: 0.5rem auto 0;
-        }
-
-        .again-btn {
+        /* Buttons */
+        .btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
             padding: 1rem 2rem;
-            background: var(--accent);
-            color: var(--white);
             border: none;
-            border-radius: 16px;
+            border-radius: 12px;
             font-family: inherit;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
+            width: 100%;
         }
 
-        .again-btn:hover {
-            background: var(--accent-dark);
+        .btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--white);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #0d9668;
             transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
         }
 
-        .again-btn svg {
-            width: 20px;
-            height: 20px;
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
         }
 
-        /* Interval bells indicator */
-        .bells-toggle {
-            position: fixed;
-            bottom: 1.5rem;
-            left: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
+        .btn-secondary {
             background: var(--white);
-            border: 2px solid var(--slate-200);
-            border-radius: 30px;
-            cursor: pointer;
-            transition: all 0.2s;
-            z-index: 50;
+            color: var(--slate-600);
+            border: 1.5px solid var(--slate-200);
         }
 
-        .bells-toggle:hover {
-            border-color: var(--accent);
+        .btn-secondary:hover {
+            background: var(--slate-50);
+            border-color: var(--slate-300);
         }
 
-        .bells-toggle.active {
-            background: var(--accent-light);
-            border-color: var(--accent);
-        }
-
-        .bells-toggle svg {
-            width: 20px;
-            height: 20px;
-            color: var(--slate-500);
-        }
-
-        .bells-toggle.active svg {
-            color: var(--accent);
-        }
-
-        .bells-dots {
+        /* Complete view */
+        .complete-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--accent);
+            border-radius: 50%;
             display: flex;
-            gap: 4px;
-        }
-
-        .bells-dot {
-            width: 6px;
-            height: 6px;
-            background: var(--slate-300);
-            border-radius: 50%;
-            transition: all 0.2s;
-        }
-
-        .bells-toggle.active .bells-dot {
-            background: var(--accent);
-        }
-
-        body.meditating .bells-toggle {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.2);
-        }
-
-        body.meditating .bells-toggle svg {
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        body.meditating .bells-toggle .bells-dot {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        body.meditating .bells-toggle.active {
-            background: rgba(16, 185, 129, 0.2);
-            border-color: var(--accent);
-        }
-
-        body.meditating .bells-toggle.active svg {
-            color: var(--accent);
-        }
-
-        body.meditating .bells-toggle.active .bells-dot {
-            background: var(--accent);
-        }
-
-        /* Hide timer toggle */
-        .timer-toggle {
-            position: fixed;
-            bottom: 1.5rem;
-            right: 1.5rem;
-            width: 48px;
-            height: 48px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            cursor: pointer;
-            display: none;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
-            z-index: 50;
+            margin: 0 auto 1rem;
+            animation: scaleIn 0.5s ease;
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
         }
 
-        body.meditating .timer-toggle {
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .complete-icon svg {
+            width: 32px;
+            height: 32px;
+            color: var(--white);
+        }
+
+        .complete-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--slate-800);
+            text-align: center;
+            margin-bottom: 0.25rem;
+        }
+
+        .complete-text {
+            color: var(--slate-500);
+            text-align: center;
+            margin-bottom: 1.25rem;
+            line-height: 1.4;
+            font-size: 0.875rem;
+        }
+
+        /* Summary */
+        .summary {
+            margin-bottom: 1.5rem;
+        }
+
+        /* Zintuig knoppen */
+        .sense-buttons {
             display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
         }
 
-        .timer-toggle:hover {
-            background: rgba(255, 255, 255, 0.2);
+        .sense-btn {
+            width: 48px;
+            height: 48px;
+            background: var(--white);
+            border: 2px solid var(--slate-200);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
         }
 
-        .timer-toggle svg {
+        .sense-btn svg {
             width: 22px;
             height: 22px;
-            color: rgba(255, 255, 255, 0.6);
+            color: var(--slate-400);
+            transition: all 0.2s;
         }
 
-        .timer-toggle.hidden svg {
-            opacity: 0.4;
+        .sense-btn:hover {
+            border-color: var(--accent);
+            background: var(--accent-light);
+        }
+
+        .sense-btn:hover svg {
+            color: var(--accent);
+        }
+
+        .sense-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .sense-btn.active svg {
+            color: var(--white);
+        }
+
+        .sense-btn .sense-count {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 18px;
+            height: 18px;
+            background: var(--accent);
+            color: var(--white);
+            font-size: 0.625rem;
+            font-weight: 700;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--white);
+        }
+
+        /* Tooltip voor sense buttons */
+        .sense-btn::after {
+            content: attr(data-label);
+            position: absolute;
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--slate-800);
+            color: var(--white);
+            font-size: 0.6875rem;
+            font-weight: 500;
+            padding: 0.375rem 0.625rem;
+            border-radius: 6px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.15s;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .sense-btn:hover::after {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Instructie tekst */
+        .sense-hint {
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--slate-400);
+            margin-bottom: 1rem;
+        }
+
+        /* Alle iconen sectie */
+        .all-icons {
+            background: var(--slate-50);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.25rem;
+            min-height: 80px;
+        }
+
+        .all-icons-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .all-icon-item {
+            width: 48px;
+            height: 48px;
+            background: var(--white);
+            border: 2px solid var(--slate-200);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: all 0.2s;
+            opacity: 0.5;
+        }
+
+        .all-icon-item svg {
+            width: 24px;
+            height: 24px;
+            color: var(--slate-400);
+            transition: all 0.2s;
+        }
+
+        .all-icon-item img {
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .all-icon-item.highlighted {
+            opacity: 1;
+            border-color: var(--accent);
+            background: var(--accent-light);
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+
+        .all-icon-item.highlighted svg {
+            color: var(--accent);
+        }
+
+        .all-icon-item.show-all {
+            opacity: 1;
+        }
+
+        .all-icon-item.show-all svg {
+            color: var(--accent);
+        }
+
+        /* Tooltip voor items */
+        .all-icon-item::after {
+            content: attr(data-label);
+            position: absolute;
+            bottom: calc(100% + 6px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--slate-800);
+            color: var(--white);
+            font-size: 0.6875rem;
+            font-weight: 500;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.15s;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .all-icon-item:hover::after,
+        .all-icon-item.highlighted::after {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Lege state */
+        .all-icons-empty {
+            text-align: center;
+            color: var(--slate-400);
+            font-size: 0.875rem;
+            padding: 1rem;
+        }
+
+        /* Actions */
+        .actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .actions .btn {
+            flex: 1;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .quote {
+            font-size: 0.875rem;
+            color: var(--accent);
         }
 
         /* Responsive */
-        @media (max-width: 480px) {
-            .ambient-btn {
+        @media (max-width: 640px) {
+            .main {
+                padding: 1.5rem 1rem;
+            }
+
+            .card {
+                padding: 1.75rem 1.25rem;
+                border-radius: 16px;
+            }
+
+            .progress-step {
+                width: 36px;
+                height: 36px;
+                font-size: 0.875rem;
+            }
+
+            .sense-icon {
                 width: 64px;
                 height: 64px;
             }
 
-            .ambient-btn svg {
-                width: 24px;
-                height: 24px;
+            .sense-icon svg {
+                width: 28px;
+                height: 28px;
             }
 
-            .duration-display {
-                font-size: 3rem;
+            .step-title {
+                font-size: 1.25rem;
             }
 
-            .start-btn {
-                width: 88px;
-                height: 88px;
-            }
-
-            .start-btn svg {
-                width: 36px;
-                height: 36px;
-            }
-
-            .orb-container {
-                width: 160px;
-                height: 160px;
+            .actions {
+                flex-direction: column;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header class="header">
         <div class="header-content">
             <div class="logo">
-                <svg viewBox="0 0 40 40" fill="none">
-                    <circle cx="20" cy="20" r="14" fill="#f0fdf4" stroke="#10b981" stroke-width="2"/>
-                    <circle cx="20" cy="20" r="5" fill="#10b981"/>
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="20" cy="20" r="16" fill="#f0fdf4" stroke="#10b981" stroke-width="2"/>
+                    <rect x="13" y="12" width="4" height="16" rx="1.5" fill="#10b981"/>
+                    <rect x="23" y="12" width="4" height="16" rx="1.5" fill="#10b981"/>
                 </svg>
             </div>
-            <h1>Stilte</h1>
+            <div class="header-text">
+                <h1>Hier & Nu</h1>
+                <p>5-4-3-2-1 oefening</p>
+            </div>
         </div>
     </header>
 
     <main class="main">
-        <!-- Setup view -->
-        <div class="view active" id="setupView">
-            <!-- Ambient sounds -->
-            <div class="ambient-row">
-                <button class="ambient-btn selected" data-ambient="silence" title="Stilte">
+        <div class="card">
+            <!-- Intro view -->
+            <div class="step-view active" id="introView">
+                <div class="intro">
+                    <h2>5-4-3-2-1 oefening</h2>
+                    <p>Voel je je onrustig of overweldigd? Deze oefening brengt je aandacht terug naar het hier en nu via je zintuigen.</p>
+                    <button class="btn btn-primary" id="startBtn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                        Begin de oefening
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step views -->
+            <div class="step-view" id="step1">
+                <div class="progress-steps">
+                    <div class="progress-step active">5</div>
+                    <div class="progress-step">4</div>
+                    <div class="progress-step">3</div>
+                    <div class="progress-step">2</div>
+                    <div class="progress-step">1</div>
+                </div>
+                <div class="sense-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
                         <circle cx="12" cy="12" r="3"/>
                     </svg>
-                </button>
-                <button class="ambient-btn" data-ambient="rain" title="Regen">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M16 13v8"/>
-                        <path d="M8 13v8"/>
-                        <path d="M12 15v8"/>
-                        <path d="M20 16.58A5 5 0 0 0 18 7h-1.26A8 8 0 1 0 4 15.25"/>
-                    </svg>
-                </button>
-                <button class="ambient-btn" data-ambient="waves" title="Golven">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>
-                        <path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>
-                        <path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>
-                    </svg>
-                </button>
-                <button class="ambient-btn" data-ambient="forest" title="Bos">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 22v-7"/>
-                        <path d="M9 22h6"/>
-                        <path d="M12 15a7 7 0 1 0 0-14 7 7 0 0 0 0 14z"/>
-                    </svg>
-                </button>
-                <button class="ambient-btn" data-ambient="fire" title="Vuur">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
-                    </svg>
-                </button>
-            </div>
-
-            <!-- Duration -->
-            <div class="duration-container">
-                <div class="duration-display">
-                    <span id="durationValue">10</span> <span>min</span>
                 </div>
-                <input type="range" class="duration-slider" id="durationSlider" min="1" max="60" value="10">
+                <div class="step-header">
+                    <p class="step-count">Stap 1 van 5</p>
+                    <h3 class="step-title">5 dingen die je ziet</h3>
+                    <p class="step-subtitle">Kijk om je heen. Wat valt je op?</p>
+                </div>
+                <p class="selection-counter">Gekozen: <span id="count1">0</span> / 5</p>
+                <div class="chip-grid" id="chips1" data-required="5">
+                    <div class="chip" title="Scherm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+                    <div class="chip" title="Raam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="3" x2="12" y2="21"/><line x1="3" y1="12" x2="21" y2="12"/></svg></div>
+                    <div class="chip" title="Lamp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg></div>
+                    <div class="chip" title="Muur"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="1"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="9"/><line x1="15" y1="3" x2="15" y2="9"/></svg></div>
+                    <div class="chip" title="Plant"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c-4-3-7-6-7-10a7 7 0 0 1 14 0c0 4-3 7-7 10z"/><path d="M12 22V12"/></svg></div>
+                    <div class="chip" title="Stoel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 11h14v4H5z"/><path d="M6 15v6"/><path d="M18 15v6"/><path d="M6 11V7a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4"/></svg></div>
+                    <div class="chip" title="Tafel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="8" width="20" height="4" rx="1"/><path d="M4 12v8"/><path d="M20 12v8"/></svg></div>
+                    <div class="chip" title="Boek"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+                    <div class="chip" title="Klok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+                    <div class="chip" title="Telefoon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg></div>
+                    <div class="chip" title="Beker"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z"/></svg></div>
+                    <div class="chip" title="Deur"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="14" height="20" rx="1"/><circle cx="15" cy="12" r="1"/></svg></div>
+                    <div class="chip" title="Huis"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+                    <div class="chip" title="Auto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h14v-5l-2-5H7l-2 5v5z"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="16.5" cy="17.5" r="2.5"/></svg></div>
+                    <div class="chip" title="Fiets"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/><path d="M12 17.5V14l-3-3 4-3 2 3h3"/></svg></div>
+                    <div class="chip" title="Boom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-7"/><path d="M9 22h6"/><path d="M12 15a7 7 0 1 0 0-14 7 7 0 0 0 0 14z"/></svg></div>
+                    <div class="chip" title="Zon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg></div>
+                    <div class="chip" title="Wolk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg></div>
+                    <div class="chip" title="Vogel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 7h.01"/><path d="M3.4 18H12a8 8 0 0 0 8-8V7a4 4 0 0 0-7.28-2.3L2 20"/><path d="M20 7l-2 2"/></svg></div>
+                    <div class="chip" title="Kat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5c.67 0 1.35.09 2 .26 1.78-2 5.03-2.84 6.42-2.26 1.4.58-.42 7-.42 7 .57 1.07 1 2.24 1 3.44C21 17.9 16.97 21 12 21s-9-3.1-9-7.56c0-1.25.5-2.4 1-3.44 0 0-1.89-6.42-.5-7 1.39-.58 4.72.23 6.5 2.23A9.04 9.04 0 0 1 12 5Z"/><path d="M8 14v.5"/><path d="M16 14v.5"/><path d="M11.25 16.25h1.5L12 17l-.75-.75Z"/></svg></div>
+                    <div class="chip" title="Hond"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 5.172C10 3.782 8.423 2.679 6.5 3c-2.823.47-4.113 6.006-4 7 .08.703 1.725 1.722 3.656 1 1.261-.472 1.96-1.45 2.344-2.5"/><path d="M14.267 5.172c0-1.39 1.577-2.493 3.5-2.172 2.823.47 4.113 6.006 4 7-.08.703-1.725 1.722-3.656 1-1.261-.472-1.855-1.45-2.239-2.5"/><path d="M8 14v.5"/><path d="M16 14v.5"/><path d="M11.25 16.75h1.5L12 17.5l-.75-.75Z"/><path d="M4.42 11.247A13.152 13.152 0 0 0 4 14.556C4 18.728 7.582 21 12 21s8-2.272 8-6.444c0-1.061-.162-2.2-.493-3.309"/></svg></div>
+                    <div class="chip" title="Koe"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9V6a2 2 0 0 1 2-2h1l1-2h2l1 2h6l1-2h2l1 2h1a2 2 0 0 1 2 2v3"/><path d="M2 9a8 8 0 0 0 8 8h4a8 8 0 0 0 8-8"/><path d="M10 17v4"/><path d="M14 17v4"/><circle cx="8" cy="9" r="1"/><circle cx="16" cy="9" r="1"/></svg></div>
+                    <div class="chip" title="Persoon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="3"/><path d="M12 22V8"/><path d="M5 12h14"/></svg></div>
+                    <div class="chip" title="Laptop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M2 20h20"/></svg></div>
+                    <div class="chip other" title="Andere" data-other="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+                </div>
+                <button class="btn btn-primary next-btn" data-step="1" data-next="2" disabled>Volgende</button>
             </div>
 
-            <!-- Start -->
-            <button class="start-btn" id="startBtn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"/>
-                    <circle cx="12" cy="12" r="3"/>
-                </svg>
-            </button>
-        </div>
-
-        <!-- Meditation view -->
-        <div class="view" id="meditationView">
-            <div class="orb-container">
-                <div class="orb-glow"></div>
-                <div class="orb"></div>
-                <svg class="progress-ring" viewBox="0 0 230 230">
-                    <circle class="bg" cx="115" cy="115" r="110"/>
-                    <circle class="progress" id="progressCircle" cx="115" cy="115" r="110"/>
-                </svg>
-            </div>
-            
-            <div class="timer" id="timer">10:00</div>
-            
-            <div class="med-controls">
-                <button class="med-btn" id="stopBtn" title="Stop">
+            <div class="step-view" id="step2">
+                <div class="progress-steps">
+                    <div class="progress-step done">5</div>
+                    <div class="progress-step active">4</div>
+                    <div class="progress-step">3</div>
+                    <div class="progress-step">2</div>
+                    <div class="progress-step">1</div>
+                </div>
+                <div class="sense-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="6" y="6" width="12" height="12" rx="1"/>
-                    </svg>
-                </button>
-                <button class="med-btn primary" id="pauseBtn" title="Pauze">
-                    <svg viewBox="0 0 24 24" fill="currentColor" id="pauseIcon">
-                        <rect x="6" y="4" width="4" height="16" rx="1"/>
-                        <rect x="14" y="4" width="4" height="16" rx="1"/>
-                    </svg>
-                </button>
-            </div>
-        </div>
-
-        <!-- Complete view -->
-        <div class="view" id="completeView">
-            <div class="complete-orb">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M20 6L9 17l-5-5"/>
-                </svg>
-            </div>
-            
-            <div class="complete-stats">
-                <div class="complete-stat">
-                    <div class="complete-stat-value" id="statMinutes">10</div>
-                    <svg class="complete-stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"/>
-                        <polyline points="12 6 12 12 16 14"/>
+                        <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                        <line x1="12" y1="19" x2="12" y2="22"/>
                     </svg>
                 </div>
+                <div class="step-header">
+                    <p class="step-count">Stap 2 van 5</p>
+                    <h3 class="step-title">4 dingen die je hoort</h3>
+                    <p class="step-subtitle">Luister aandachtig. Welke geluiden zijn er?</p>
+                </div>
+                <p class="selection-counter">Gekozen: <span id="count2">0</span> / 4</p>
+                <div class="chip-grid" id="chips2" data-required="4">
+                    <div class="chip" title="Ademhaling"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c4-3 7-6 7-10a7 7 0 1 0-14 0c0 4 3 7 7 10z"/></svg></div>
+                    <div class="chip" title="Verkeer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h14v-5l-2-5H7l-2 5v5z"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="16.5" cy="17.5" r="2.5"/></svg></div>
+                    <div class="chip" title="Muziek"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
+                    <div class="chip" title="Stemmen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+                    <div class="chip" title="Vogel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 7h.01"/><path d="M3.4 18H12a8 8 0 0 0 8-8V7a4 4 0 0 0-7.28-2.3L2 20"/><path d="M20 7l-2 2"/></svg></div>
+                    <div class="chip" title="Wind"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/><path d="M12.6 19.4A2 2 0 1 0 14 16H2"/></svg></div>
+                    <div class="chip" title="Regen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 13V21"/><path d="M8 13V21"/><path d="M12 15V23"/><path d="M20 16.58A5 5 0 0 0 18 7h-1.26A8 8 0 1 0 4 15.25"/></svg></div>
+                    <div class="chip" title="Toetsenbord"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 8h.01"/><path d="M10 8h.01"/><path d="M14 8h.01"/><path d="M18 8h.01"/><path d="M6 12h.01"/><path d="M10 12h.01"/><path d="M14 12h.01"/><path d="M18 12h.01"/><path d="M6 16h12"/></svg></div>
+                    <div class="chip" title="Ventilator"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12c-3 0-5.3-2.7-3-6 1.5-2.1 4.5-2.1 6 0 2.3 3.3 0 6-3 6z"/><path d="M12 12c0 3 2.7 5.3 6 3 2.1-1.5 2.1-4.5 0-6-3.3-2.3-6 0-6 3z"/><path d="M12 12c3 0 5.3 2.7 3 6-1.5 2.1-4.5 2.1-6 0-2.3-3.3 0-6 3-6z"/><path d="M12 12c0-3-2.7-5.3-6-3-2.1 1.5-2.1 4.5 0 6 3.3 2.3 6 0 6-3z"/><circle cx="12" cy="12" r="2"/></svg></div>
+                    <div class="chip" title="TV"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="15" rx="2"/><polyline points="17 2 12 7 7 2"/></svg></div>
+                    <div class="chip" title="Voetstappen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.68V16a2 2 0 1 1-4 0z"/><path d="M20 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6-1.87 0-2.5 1.8-2.5 3.5 0 3.11 2 5.66 2 8.68V20a2 2 0 1 0 4 0z"/></svg></div>
+                    <div class="chip" title="Hond"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 5.172C10 3.782 8.423 2.679 6.5 3c-2.823.47-4.113 6.006-4 7 .08.703 1.725 1.722 3.656 1 1.261-.472 1.96-1.45 2.344-2.5"/><path d="M14.267 5.172c0-1.39 1.577-2.493 3.5-2.172 2.823.47 4.113 6.006 4 7-.08.703-1.725 1.722-3.656 1-1.261-.472-1.855-1.45-2.239-2.5"/><path d="M8 14v.5"/><path d="M16 14v.5"/><path d="M11.25 16.75h1.5L12 17.5l-.75-.75Z"/><path d="M4.42 11.247A13.152 13.152 0 0 0 4 14.556C4 18.728 7.582 21 12 21s8-2.272 8-6.444c0-1.061-.162-2.2-.493-3.309m-9.243-6.082A8.801 8.801 0 0 1 12 5c.78 0 1.5.108 2.161.306"/></svg></div>
+                    <div class="chip" title="Notificatie"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
+                    <div class="chip" title="Stilte"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg></div>
+                    <div class="chip other" title="Andere" data-other="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+                </div>
+                <button class="btn btn-primary next-btn" data-step="2" data-next="3" disabled>Volgende</button>
             </div>
-            
-            <button class="again-btn" id="againBtn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
-                    <path d="M3 3v5h5"/>
-                </svg>
-                Opnieuw
-            </button>
+
+            <div class="step-view" id="step3">
+                <div class="progress-steps">
+                    <div class="progress-step done">5</div>
+                    <div class="progress-step done">4</div>
+                    <div class="progress-step active">3</div>
+                    <div class="progress-step">2</div>
+                    <div class="progress-step">1</div>
+                </div>
+                <div class="sense-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2"/>
+                        <path d="M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2"/>
+                        <path d="M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8"/>
+                        <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/>
+                    </svg>
+                </div>
+                <div class="step-header">
+                    <p class="step-count">Stap 3 van 5</p>
+                    <h3 class="step-title">3 dingen die je voelt</h3>
+                    <p class="step-subtitle">Fysieke sensaties. Wat raakt je huid?</p>
+                </div>
+                <p class="selection-counter">Gekozen: <span id="count3">0</span> / 3</p>
+                <div class="chip-grid" id="chips3" data-required="3">
+                    <div class="chip" title="Stoel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 11h14v4H5z"/><path d="M6 15v6"/><path d="M18 15v6"/><path d="M6 11V7a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4"/></svg></div>
+                    <div class="chip" title="Voeten"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16c0-3 2-5 5-5a5 5 0 0 1 3.5 1.5l3 3a2.5 2.5 0 0 1-3.5 3.5l-1-1"/><circle cx="7" cy="9" r="2"/><circle cx="11" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="18" cy="9" r="1.5"/></svg></div>
+                    <div class="chip" title="Kleding"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg></div>
+                    <div class="chip" title="Handen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2"/><path d="M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg></div>
+                    <div class="chip" title="Warmte"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg></div>
+                    <div class="chip" title="Koelte"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="22"/><path d="M20 12l-8 4-8-4"/><path d="M20 12l-8-4-8 4"/></svg></div>
+                    <div class="chip" title="Ademhaling"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c4-3 7-6 7-10a7 7 0 1 0-14 0c0 4 3 7 7 10z"/></svg></div>
+                    <div class="chip" title="Muis"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="7"/><path d="M12 6v4"/></svg></div>
+                    <div class="chip" title="Deken"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18v12a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6z"/><path d="M3 6c0-1.7 1.3-3 3-3h12c1.7 0 3 1.3 3 3"/><path d="M3 10h18"/></svg></div>
+                    <div class="chip" title="Haar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8 2 6 5 6 9c0 3 1 5 1 8"/><path d="M6 17c0 2 2 5 6 5s6-3 6-5"/><path d="M18 9c0-4-2-7-6-7"/><path d="M18 17c0-3 1-5 1-8"/></svg></div>
+                    <div class="chip" title="Horloge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="7"/><polyline points="12 9 12 12 13.5 13.5"/><path d="M16.51 17.35l-.35 3.83a2 2 0 0 1-2 1.82H9.83a2 2 0 0 1-2-1.82l-.35-3.83"/><path d="M7.49 6.65l.35-3.83A2 2 0 0 1 9.83 1h4.35a2 2 0 0 1 2 1.82l.35 3.83"/></svg></div>
+                    <div class="chip" title="Ring"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/></svg></div>
+                    <div class="chip" title="Hartslag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg></div>
+                    <div class="chip" title="Telefoon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg></div>
+                    <div class="chip other" title="Andere" data-other="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+                </div>
+                <button class="btn btn-primary next-btn" data-step="3" data-next="4" disabled>Volgende</button>
+            </div>
+
+            <div class="step-view" id="step4">
+                <div class="progress-steps">
+                    <div class="progress-step done">5</div>
+                    <div class="progress-step done">4</div>
+                    <div class="progress-step done">3</div>
+                    <div class="progress-step active">2</div>
+                    <div class="progress-step">1</div>
+                </div>
+                <div class="sense-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M2 12h6"/>
+                        <path d="M22 12h-6"/>
+                        <path d="M12 2v6"/>
+                        <path d="M12 22v-6"/>
+                        <circle cx="12" cy="12" r="4"/>
+                    </svg>
+                </div>
+                <div class="step-header">
+                    <p class="step-count">Stap 4 van 5</p>
+                    <h3 class="step-title">2 dingen die je ruikt</h3>
+                    <p class="step-subtitle">Adem in. Welke geuren zijn er?</p>
+                </div>
+                <p class="selection-counter">Gekozen: <span id="count4">0</span> / 2</p>
+                <div class="chip-grid" id="chips4" data-required="2">
+                    <div class="chip" title="Koffie"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg></div>
+                    <div class="chip" title="Thee"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z"/></svg></div>
+                    <div class="chip" title="Frisse lucht"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/><path d="M12.6 19.4A2 2 0 1 0 14 16H2"/></svg></div>
+                    <div class="chip" title="Eten"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/></svg></div>
+                    <div class="chip" title="Bloem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7.5a4.5 4.5 0 1 1 4.5 4.5M12 7.5A4.5 4.5 0 1 0 7.5 12M12 7.5V9m-4.5 3a4.5 4.5 0 1 0 4.5 4.5M7.5 12H9m7.5 0a4.5 4.5 0 1 1-4.5 4.5m4.5-4.5H15m-3 4.5V15"/><circle cx="12" cy="12" r="3"/></svg></div>
+                    <div class="chip" title="Parfum"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2h6v3H9z"/><path d="M8 5h8v3H8z"/><path d="M6 8h12v14H6z"/><path d="M10 2V1"/><path d="M14 2V1"/></svg></div>
+                    <div class="chip" title="Kaars"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c.5 2 2 3 2 5a2 2 0 1 1-4 0c0-2 1.5-3 2-5"/><path d="M8 9h8v13H8z"/></svg></div>
+                    <div class="chip" title="Zeep"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="10" r="6"/><circle cx="17" cy="7" r="3"/><circle cx="18" cy="16" r="4"/></svg></div>
+                    <div class="chip" title="Regen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 13V21"/><path d="M8 13V21"/><path d="M12 15V23"/><path d="M20 16.58A5 5 0 0 0 18 7h-1.26A8 8 0 1 0 4 15.25"/></svg></div>
+                    <div class="chip" title="Gras"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22V12C4 8 6 4 10 4"/><path d="M12 22V8c0-4 2-6 4-6"/><path d="M20 22V14c0-3-1-5-3-5"/></svg></div>
+                    <div class="chip" title="Hout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="8" ry="4"/><path d="M4 6v12c0 2.2 3.6 4 8 4s8-1.8 8-4V6"/><path d="M4 12c0 2.2 3.6 4 8 4s8-1.8 8-4"/></svg></div>
+                    <div class="chip" title="Wasmiddel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6z"/><path d="M3 6l3-4h12l3 4"/><circle cx="12" cy="14" r="3"/></svg></div>
+                    <div class="chip" title="Zweet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></div>
+                    <div class="chip" title="Schoonmaak"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 22v-6"/><path d="M3 16h6"/><circle cx="6" cy="10" r="4"/><path d="M21 22v-6"/><path d="M18 22h6"/><circle cx="21" cy="10" r="2"/></svg></div>
+                    <div class="chip" title="Niets"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></div>
+                    <div class="chip other" title="Andere" data-other="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+                </div>
+                <button class="btn btn-primary next-btn" data-step="4" data-next="5" disabled>Volgende</button>
+            </div>
+
+            <div class="step-view" id="step5">
+                <div class="progress-steps">
+                    <div class="progress-step done">5</div>
+                    <div class="progress-step done">4</div>
+                    <div class="progress-step done">3</div>
+                    <div class="progress-step done">2</div>
+                    <div class="progress-step active">1</div>
+                </div>
+                <div class="sense-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 8c-2.5 0-4 1.5-4 3 0 2 2 3 2 5"/>
+                        <path d="M10 19h4"/>
+                        <path d="M12 22v-3"/>
+                        <path d="M7 8a5 5 0 0 1 10 0"/>
+                    </svg>
+                </div>
+                <div class="step-header">
+                    <p class="step-count">Stap 5 van 5</p>
+                    <h3 class="step-title">1 ding dat je proeft</h3>
+                    <p class="step-subtitle">Wat proef je nu?</p>
+                </div>
+                <p class="selection-counter">Gekozen: <span id="count5">0</span> / 1</p>
+                <div class="chip-grid" id="chips5" data-required="1">
+                    <div class="chip" title="Koffie"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg></div>
+                    <div class="chip" title="Thee"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z"/></svg></div>
+                    <div class="chip" title="Water"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></div>
+                    <div class="chip" title="Frisdrank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2h8l1 5H7l1-5z"/><path d="M7 7h10v13a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V7z"/><path d="M12 7v4"/></svg></div>
+                    <div class="chip" title="Eten"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/></svg></div>
+                    <div class="chip" title="Brood"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8c0-3 2-5 7-5s7 2 7 5c1 0 2 1 2 3s-1 3-2 3v6a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-6c-1 0-2-1-2-3s1-3 2-3z"/></svg></div>
+                    <div class="chip" title="Kauwgom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="4"/><circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/></svg></div>
+                    <div class="chip" title="Fruit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20a8 8 0 0 0 8-8c0-4-3-8-8-8s-8 4-8 8a8 8 0 0 0 8 8z"/><path d="M12 4c0-1 .5-2 2-2"/></svg></div>
+                    <div class="chip" title="Chocolade"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><line x1="9" y1="6" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="18"/><line x1="3" y1="12" x2="21" y2="12"/></svg></div>
+                    <div class="chip" title="Snoep"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 7.5L6 4l-1.5 1.5L8 9"/><path d="M14.5 16.5L18 20l1.5-1.5L16 15"/><rect x="8" y="8" width="8" height="8" rx="2" transform="rotate(45 12 12)"/></svg></div>
+                    <div class="chip" title="Koek"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="8" cy="10" r="1"/><circle cx="15" cy="9" r="1"/><circle cx="10" cy="15" r="1"/><circle cx="15" cy="14" r="1"/></svg></div>
+                    <div class="chip" title="Munt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c-4-3-7-6-7-10a7 7 0 0 1 14 0c0 4-3 7-7 10z"/><path d="M12 22V12"/></svg></div>
+                    <div class="chip" title="Tandpasta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2h8l2 4H6l2-4z"/><rect x="6" y="6" width="12" height="16" rx="2"/><circle cx="12" cy="14" r="3"/></svg></div>
+                    <div class="chip" title="Speeksel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></div>
+                    <div class="chip" title="Niets"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></div>
+                    <div class="chip other" title="Andere" data-other="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+                </div>
+                <button class="btn btn-primary next-btn" data-step="5" data-next="complete" disabled>Afronden</button>
+            </div>
+
+            <!-- Complete view -->
+            <div class="step-view" id="completeView">
+                <div class="complete-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 6L9 17l-5-5"/>
+                    </svg>
+                </div>
+                <h3 class="complete-title">Je bent hier</h3>
+                <p class="complete-text">Je aandacht is terug in het nu. Neem even de tijd om dit gevoel vast te houden.</p>
+                
+                <div class="summary" id="summary"></div>
+                
+                <div class="actions">
+                    <button class="btn btn-secondary" id="restartBtn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                            <path d="M3 3v5h5"/>
+                        </svg>
+                        Opnieuw
+                    </button>
+                </div>
+            </div>
         </div>
     </main>
 
-    <!-- Interval bells toggle -->
-    <button class="bells-toggle" id="bellsToggle" title="Interval bellen">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-        </svg>
-        <div class="bells-dots">
-            <div class="bells-dot"></div>
-            <div class="bells-dot"></div>
-            <div class="bells-dot"></div>
-        </div>
-    </button>
+    <footer class="footer">
+        <p class="quote">Waar je aandacht gaat, gaat je energie.</p>
+    </footer>
 
-    <!-- Timer visibility toggle -->
-    <button class="timer-toggle" id="timerToggle" title="Timer tonen/verbergen">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"/>
-            <polyline points="12 6 12 12 16 14"/>
-        </svg>
-    </button>
+    <!-- Drawing Modal -->
+    <div class="modal-overlay" id="drawModal">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-title">Teken wat je waarneemt</span>
+                <button class="modal-close" id="modalClose">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="canvas-container">
+                <canvas class="drawing-canvas" id="drawingCanvas"></canvas>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="clearCanvas">Wissen</button>
+                <button class="btn btn-primary" id="saveDrawing">Opslaan</button>
+            </div>
+        </div>
+    </div>
 
     <script>
         // State
-        let selectedAmbient = 'silence';
-        let selectedDuration = 10;
-        let timeRemaining = 600;
-        let totalTime = 600;
-        let isRunning = false;
-        let isPaused = false;
-        let timerInterval = null;
-        let timerVisible = true;
-        let bellsEnabled = false;
-        let bellInterval = null;
-
-        // Audio
-        let audioCtx = null;
-        let ambientSource = null;
-        let ambientGain = null;
-        let noiseBuffer = null;
-
-        // Elements
-        const setupView = document.getElementById('setupView');
-        const meditationView = document.getElementById('meditationView');
-        const completeView = document.getElementById('completeView');
-        const durationSlider = document.getElementById('durationSlider');
-        const durationValue = document.getElementById('durationValue');
-        const timer = document.getElementById('timer');
-        const progressCircle = document.getElementById('progressCircle');
-        const pauseBtn = document.getElementById('pauseBtn');
-        const pauseIcon = document.getElementById('pauseIcon');
-        const timerToggle = document.getElementById('timerToggle');
-        const bellsToggle = document.getElementById('bellsToggle');
-
-        // Initialize audio
-        function initAudio() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                createNoiseBuffer();
-            }
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-        }
-
-        // Create white/pink noise buffer
-        function createNoiseBuffer() {
-            const bufferSize = audioCtx.sampleRate * 2;
-            noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-            const data = noiseBuffer.getChannelData(0);
-            
-            let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
-            for (let i = 0; i < bufferSize; i++) {
-                const white = Math.random() * 2 - 1;
-                b0 = 0.99886 * b0 + white * 0.0555179;
-                b1 = 0.99332 * b1 + white * 0.0750759;
-                b2 = 0.96900 * b2 + white * 0.1538520;
-                b3 = 0.86650 * b3 + white * 0.3104856;
-                b4 = 0.55000 * b4 + white * 0.5329522;
-                b5 = -0.7616 * b5 - white * 0.0168980;
-                data[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.11;
-                b6 = white * 0.115926;
-            }
-        }
-
-        // Play singing bowl / gong
-        function playBell(type = 'start') {
-            if (!audioCtx) return;
-            
-            const now = audioCtx.currentTime;
-            const osc1 = audioCtx.createOscillator();
-            const osc2 = audioCtx.createOscillator();
-            const osc3 = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            
-            // Bell frequencies
-            const baseFreq = type === 'start' ? 220 : type === 'end' ? 261.63 : 196;
-            osc1.frequency.value = baseFreq;
-            osc2.frequency.value = baseFreq * 2.5;
-            osc3.frequency.value = baseFreq * 4;
-            
-            osc1.type = 'sine';
-            osc2.type = 'sine';
-            osc3.type = 'sine';
-            
-            const gain1 = audioCtx.createGain();
-            const gain2 = audioCtx.createGain();
-            const gain3 = audioCtx.createGain();
-            
-            osc1.connect(gain1);
-            osc2.connect(gain2);
-            osc3.connect(gain3);
-            gain1.connect(gain);
-            gain2.connect(gain);
-            gain3.connect(gain);
-            gain.connect(audioCtx.destination);
-            
-            // Envelope
-            const attackTime = 0.01;
-            const decayTime = type === 'end' ? 4 : 3;
-            const volume = 0.15;
-            
-            gain1.gain.setValueAtTime(0, now);
-            gain1.gain.linearRampToValueAtTime(volume, now + attackTime);
-            gain1.gain.exponentialRampToValueAtTime(0.001, now + decayTime);
-            
-            gain2.gain.setValueAtTime(0, now);
-            gain2.gain.linearRampToValueAtTime(volume * 0.3, now + attackTime);
-            gain2.gain.exponentialRampToValueAtTime(0.001, now + decayTime * 0.7);
-            
-            gain3.gain.setValueAtTime(0, now);
-            gain3.gain.linearRampToValueAtTime(volume * 0.1, now + attackTime);
-            gain3.gain.exponentialRampToValueAtTime(0.001, now + decayTime * 0.5);
-            
-            osc1.start(now);
-            osc2.start(now);
-            osc3.start(now);
-            osc1.stop(now + decayTime);
-            osc2.stop(now + decayTime);
-            osc3.stop(now + decayTime);
-        }
-
-        // Ambient sound generators
-        const ambientGenerators = {
-            silence: () => {},
-            
-            rain: () => {
-                if (!noiseBuffer) return;
-                
-                const source = audioCtx.createBufferSource();
-                source.buffer = noiseBuffer;
-                source.loop = true;
-                
-                const filter = audioCtx.createBiquadFilter();
-                filter.type = 'lowpass';
-                filter.frequency.value = 800;
-                
-                const gain = audioCtx.createGain();
-                gain.gain.value = 0.3;
-                
-                source.connect(filter);
-                filter.connect(gain);
-                gain.connect(audioCtx.destination);
-                
-                source.start();
-                ambientSource = source;
-                ambientGain = gain;
-            },
-            
-            waves: () => {
-                if (!noiseBuffer) return;
-                
-                const source = audioCtx.createBufferSource();
-                source.buffer = noiseBuffer;
-                source.loop = true;
-                
-                const filter = audioCtx.createBiquadFilter();
-                filter.type = 'lowpass';
-                filter.frequency.value = 400;
-                
-                const gain = audioCtx.createGain();
-                
-                // Wave modulation
-                const lfo = audioCtx.createOscillator();
-                const lfoGain = audioCtx.createGain();
-                lfo.frequency.value = 0.08;
-                lfoGain.gain.value = 0.15;
-                lfo.connect(lfoGain);
-                lfoGain.connect(gain.gain);
-                gain.gain.value = 0.2;
-                lfo.start();
-                
-                source.connect(filter);
-                filter.connect(gain);
-                gain.connect(audioCtx.destination);
-                
-                source.start();
-                ambientSource = source;
-                ambientGain = gain;
-            },
-            
-            forest: () => {
-                if (!noiseBuffer) return;
-                
-                const source = audioCtx.createBufferSource();
-                source.buffer = noiseBuffer;
-                source.loop = true;
-                
-                const filter = audioCtx.createBiquadFilter();
-                filter.type = 'bandpass';
-                filter.frequency.value = 2000;
-                filter.Q.value = 0.5;
-                
-                const gain = audioCtx.createGain();
-                gain.gain.value = 0.08;
-                
-                source.connect(filter);
-                filter.connect(gain);
-                gain.connect(audioCtx.destination);
-                
-                source.start();
-                ambientSource = source;
-                ambientGain = gain;
-            },
-            
-            fire: () => {
-                if (!noiseBuffer) return;
-                
-                const source = audioCtx.createBufferSource();
-                source.buffer = noiseBuffer;
-                source.loop = true;
-                
-                const filter = audioCtx.createBiquadFilter();
-                filter.type = 'lowpass';
-                filter.frequency.value = 600;
-                
-                // Crackle modulation
-                const lfo = audioCtx.createOscillator();
-                const lfoGain = audioCtx.createGain();
-                lfo.type = 'square';
-                lfo.frequency.value = 3 + Math.random() * 5;
-                lfoGain.gain.value = 0.1;
-                
-                const gain = audioCtx.createGain();
-                gain.gain.value = 0.2;
-                
-                lfo.connect(lfoGain);
-                lfoGain.connect(gain.gain);
-                lfo.start();
-                
-                source.connect(filter);
-                filter.connect(gain);
-                gain.connect(audioCtx.destination);
-                
-                source.start();
-                ambientSource = source;
-                ambientGain = gain;
-            }
+        let responses = {
+            see: [],
+            hear: [],
+            feel: [],
+            smell: [],
+            taste: []
         };
 
-        function startAmbient() {
-            stopAmbient();
-            if (selectedAmbient !== 'silence' && ambientGenerators[selectedAmbient]) {
-                ambientGenerators[selectedAmbient]();
+        let drawings = {
+            see: [],
+            hear: [],
+            feel: [],
+            smell: [],
+            taste: []
+        };
+
+        const stepToSense = {
+            1: 'see',
+            2: 'hear',
+            3: 'feel',
+            4: 'smell',
+            5: 'taste'
+        };
+
+        // Drawing state
+        let currentDrawingStep = null;
+        let isDrawing = false;
+        let lastX = 0;
+        let lastY = 0;
+
+        // Elements
+        const startBtn = document.getElementById('startBtn');
+        const restartBtn = document.getElementById('restartBtn');
+        const summary = document.getElementById('summary');
+        const drawModal = document.getElementById('drawModal');
+        const drawingCanvas = document.getElementById('drawingCanvas');
+        const ctx = drawingCanvas.getContext('2d');
+        const modalClose = document.getElementById('modalClose');
+        const clearCanvas = document.getElementById('clearCanvas');
+        const saveDrawing = document.getElementById('saveDrawing');
+
+        // Initialize canvas
+        function initCanvas() {
+            const container = drawingCanvas.parentElement;
+            const rect = container.getBoundingClientRect();
+            drawingCanvas.width = rect.width;
+            drawingCanvas.height = 200;
+            ctx.strokeStyle = '#10b981';
+            ctx.lineWidth = 3;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+        }
+
+        // Drawing functions
+        function getPos(e) {
+            const rect = drawingCanvas.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            return {
+                x: clientX - rect.left,
+                y: clientY - rect.top
+            };
+        }
+
+        function startDraw(e) {
+            isDrawing = true;
+            const pos = getPos(e);
+            lastX = pos.x;
+            lastY = pos.y;
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            e.preventDefault();
+            const pos = getPos(e);
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+            lastX = pos.x;
+            lastY = pos.y;
+        }
+
+        function stopDraw() {
+            isDrawing = false;
+        }
+
+        drawingCanvas.addEventListener('mousedown', startDraw);
+        drawingCanvas.addEventListener('mousemove', draw);
+        drawingCanvas.addEventListener('mouseup', stopDraw);
+        drawingCanvas.addEventListener('mouseout', stopDraw);
+        drawingCanvas.addEventListener('touchstart', startDraw);
+        drawingCanvas.addEventListener('touchmove', draw);
+        drawingCanvas.addEventListener('touchend', stopDraw);
+
+        // Modal functions
+        function openDrawModal(step) {
+            currentDrawingStep = step;
+            drawModal.classList.add('active');
+            initCanvas();
+            ctx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
+        }
+
+        function closeDrawModal() {
+            drawModal.classList.remove('active');
+            currentDrawingStep = null;
+        }
+
+        modalClose.addEventListener('click', closeDrawModal);
+        clearCanvas.addEventListener('click', () => {
+            ctx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
+        });
+
+        saveDrawing.addEventListener('click', () => {
+            const dataUrl = drawingCanvas.toDataURL('image/png');
+            const sense = stepToSense[currentDrawingStep];
+            drawings[sense].push(dataUrl);
+            
+            // Update chip visually
+            const chipGrid = document.getElementById(`chips${currentDrawingStep}`);
+            const otherChip = chipGrid.querySelector('[data-other]');
+            otherChip.classList.add('selected');
+            
+            // Update counter
+            updateCounter(currentDrawingStep);
+            
+            closeDrawModal();
+        });
+
+        drawModal.addEventListener('click', (e) => {
+            if (e.target === drawModal) closeDrawModal();
+        });
+
+        // Update counter
+        function updateCounter(step) {
+            const chipGrid = document.getElementById(`chips${step}`);
+            const required = parseInt(chipGrid.dataset.required);
+            const selected = chipGrid.querySelectorAll('.chip.selected').length;
+            const counter = document.getElementById(`count${step}`);
+            const nextBtn = document.querySelector(`#step${step} .next-btn`);
+            
+            counter.textContent = selected;
+            nextBtn.disabled = selected < required;
+        }
+
+        // Initialize chip handlers
+        function initChipHandlers() {
+            for (let step = 1; step <= 5; step++) {
+                const chipGrid = document.getElementById(`chips${step}`);
+                const required = parseInt(chipGrid.dataset.required);
+                const chips = chipGrid.querySelectorAll('.chip');
+                
+                chips.forEach(chip => {
+                    chip.addEventListener('click', () => {
+                        // Check if it's the "other" chip
+                        if (chip.dataset.other) {
+                            if (!chip.classList.contains('selected')) {
+                                openDrawModal(step);
+                            } else {
+                                // Deselect and remove drawing
+                                chip.classList.remove('selected');
+                                const sense = stepToSense[step];
+                                drawings[sense] = [];
+                                updateCounter(step);
+                            }
+                            return;
+                        }
+                        
+                        const selected = chipGrid.querySelectorAll('.chip.selected');
+                        
+                        if (chip.classList.contains('selected')) {
+                            chip.classList.remove('selected');
+                        } else if (selected.length < required) {
+                            chip.classList.add('selected');
+                        }
+                        
+                        updateCounter(step);
+                    });
+                });
             }
         }
 
-        function stopAmbient() {
-            if (ambientSource) {
-                try {
-                    ambientSource.stop();
-                } catch (e) {}
-                ambientSource = null;
-            }
+        // Show step
+        function showStep(stepId) {
+            document.querySelectorAll('.step-view').forEach(v => v.classList.remove('active'));
+            document.getElementById(stepId).classList.add('active');
         }
 
-        // Format time
-        function formatTime(seconds) {
-            const mins = Math.floor(seconds / 60);
-            const secs = seconds % 60;
-            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        // Save responses from step
+        function saveResponses(step) {
+            const sense = stepToSense[step];
+            const chipGrid = document.getElementById(`chips${step}`);
+            const selected = chipGrid.querySelectorAll('.chip.selected:not([data-other])');
+            responses[sense] = Array.from(selected).map(c => ({
+                title: c.getAttribute('title'),
+                svg: c.querySelector('svg').outerHTML
+            }));
         }
 
-        // Update progress ring
-        function updateProgress() {
-            const circumference = 2 * Math.PI * 110;
-            const progress = timeRemaining / totalTime;
-            const offset = circumference * (1 - progress);
-            progressCircle.style.strokeDasharray = circumference;
-            progressCircle.style.strokeDashoffset = offset;
-        }
+        // Generate summary
+        function generateSummary() {
+            const senseIcons = {
+                see: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>',
+                hear: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>',
+                feel: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2"/><path d="M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8"/></svg>',
+                smell: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h6M22 12h-6M12 2v6M12 22v-6"/><circle cx="12" cy="12" r="4"/></svg>',
+                taste: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8c-2.5 0-4 1.5-4 3 0 2 2 3 2 5"/><path d="M10 19h4"/><path d="M7 8a5 5 0 0 1 10 0"/></svg>'
+            };
 
-        // Show view
-        function showView(view) {
-            [setupView, meditationView, completeView].forEach(v => v.classList.remove('active'));
-            view.classList.add('active');
-            document.body.classList.toggle('meditating', view === meditationView);
-        }
+            const labels = {
+                see: 'Gezien',
+                hear: 'Gehoord',
+                feel: 'Gevoeld',
+                smell: 'Geroken',
+                taste: 'Geproefd'
+            };
 
-        // Start meditation
-        function startMeditation() {
-            initAudio();
+            // Verzamel alle items per zintuig
+            let itemsBySense = {};
+            let allItems = [];
             
-            totalTime = selectedDuration * 60;
-            timeRemaining = totalTime;
-            isRunning = true;
-            isPaused = false;
+            const senseOrder = ['see', 'hear', 'feel', 'smell', 'taste'];
             
-            timer.textContent = formatTime(timeRemaining);
-            updateProgress();
-            showView(meditationView);
-            
-            // Play start bell
-            setTimeout(() => playBell('start'), 500);
-            
-            // Start ambient
-            setTimeout(() => startAmbient(), 1500);
-            
-            // Setup interval bells
-            if (bellsEnabled && selectedDuration >= 5) {
-                const intervalTime = Math.floor(totalTime / 3);
-                bellInterval = setInterval(() => {
-                    if (isRunning && !isPaused && timeRemaining > 30) {
-                        playBell('interval');
-                    }
-                }, intervalTime * 1000);
-            }
-            
-            // Start timer
-            timerInterval = setInterval(() => {
-                if (!isPaused) {
-                    timeRemaining--;
-                    timer.textContent = formatTime(timeRemaining);
-                    updateProgress();
-                    
-                    if (timeRemaining <= 0) {
-                        completeMeditation();
-                    }
+            senseOrder.forEach(sense => {
+                itemsBySense[sense] = [];
+                
+                responses[sense].forEach(item => {
+                    const itemData = {
+                        sense: sense,
+                        title: item.title,
+                        svg: item.svg,
+                        isDrawing: false
+                    };
+                    itemsBySense[sense].push(itemData);
+                    allItems.push(itemData);
+                });
+                
+                drawings[sense].forEach(d => {
+                    const itemData = {
+                        sense: sense,
+                        title: 'Tekening',
+                        dataUrl: d,
+                        isDrawing: true
+                    };
+                    itemsBySense[sense].push(itemData);
+                    allItems.push(itemData);
+                });
+            });
+
+            // Bouw zintuig knoppen
+            let buttonsHtml = senseOrder.map(sense => {
+                const count = itemsBySense[sense].length;
+                if (count === 0) return '';
+                return `<button class="sense-btn" data-sense="${sense}" data-label="${labels[sense]}">
+                    ${senseIcons[sense]}
+                    <span class="sense-count">${count}</span>
+                </button>`;
+            }).join('');
+
+            // Bouw de items grid
+            let gridHtml = allItems.map((item, index) => {
+                if (item.isDrawing) {
+                    return `<div class="all-icon-item show-all" data-sense="${item.sense}" data-label="${item.title}" data-index="${index}">
+                        <img src="${item.dataUrl}" alt="Tekening">
+                    </div>`;
                 }
-            }, 1000);
+                return `<div class="all-icon-item show-all" data-sense="${item.sense}" data-label="${item.title}" data-index="${index}">
+                    ${item.svg}
+                </div>`;
+            }).join('');
+
+            summary.innerHTML = `
+                <div class="sense-buttons">${buttonsHtml}</div>
+                <p class="sense-hint">Tik op een zintuig om te filteren</p>
+                <div class="all-icons">
+                    <div class="all-icons-grid">${gridHtml}</div>
+                </div>
+            `;
+
+            // Voeg interactie toe
+            let activeSense = null;
+            const senseButtons = summary.querySelectorAll('.sense-btn');
+            const iconItems = summary.querySelectorAll('.all-icon-item');
+
+            senseButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const sense = btn.dataset.sense;
+                    
+                    if (activeSense === sense) {
+                        // Deactiveer - toon alles
+                        activeSense = null;
+                        senseButtons.forEach(b => b.classList.remove('active'));
+                        iconItems.forEach(item => {
+                            item.classList.remove('highlighted');
+                            item.classList.add('show-all');
+                        });
+                    } else {
+                        // Activeer dit zintuig
+                        activeSense = sense;
+                        senseButtons.forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        
+                        iconItems.forEach(item => {
+                            item.classList.remove('show-all');
+                            if (item.dataset.sense === sense) {
+                                item.classList.add('highlighted');
+                            } else {
+                                item.classList.remove('highlighted');
+                            }
+                        });
+                    }
+                });
+            });
         }
 
-        // Pause/resume
-        function togglePause() {
-            isPaused = !isPaused;
+        // Reset
+        function reset() {
+            responses = { see: [], hear: [], feel: [], smell: [], taste: [] };
+            drawings = { see: [], hear: [], feel: [], smell: [], taste: [] };
             
-            if (isPaused) {
-                pauseIcon.innerHTML = '<polygon points="5 3 19 12 5 21 5 3"/>';
-                if (ambientGain) ambientGain.gain.value = 0;
-            } else {
-                pauseIcon.innerHTML = '<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>';
-                if (ambientGain) ambientGain.gain.value = 0.2;
+            // Clear all selections
+            document.querySelectorAll('.chip').forEach(chip => {
+                chip.classList.remove('selected');
+            });
+            
+            // Reset counters
+            for (let step = 1; step <= 5; step++) {
+                document.getElementById(`count${step}`).textContent = '0';
+                document.querySelector(`#step${step} .next-btn`).disabled = true;
             }
-        }
-
-        // Stop
-        function stopMeditation() {
-            isRunning = false;
-            clearInterval(timerInterval);
-            clearInterval(bellInterval);
-            stopAmbient();
-            showView(setupView);
-        }
-
-        // Complete
-        function completeMeditation() {
-            isRunning = false;
-            clearInterval(timerInterval);
-            clearInterval(bellInterval);
-            stopAmbient();
             
-            // Play end bells (3 times)
-            playBell('end');
-            setTimeout(() => playBell('end'), 1500);
-            setTimeout(() => playBell('end'), 3000);
-            
-            document.getElementById('statMinutes').textContent = selectedDuration;
-            
-            setTimeout(() => showView(completeView), 500);
+            showStep('introView');
         }
 
         // Event listeners
-        document.querySelectorAll('.ambient-btn').forEach(btn => {
+        startBtn.addEventListener('click', () => showStep('step1'));
+        restartBtn.addEventListener('click', reset);
+
+        // Next buttons
+        document.querySelectorAll('.next-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                document.querySelectorAll('.ambient-btn').forEach(b => b.classList.remove('selected'));
-                btn.classList.add('selected');
-                selectedAmbient = btn.dataset.ambient;
+                const step = parseInt(btn.dataset.step);
+                saveResponses(step);
+                
+                const next = btn.dataset.next;
+                if (next === 'complete') {
+                    generateSummary();
+                    showStep('completeView');
+                } else {
+                    showStep(`step${next}`);
+                }
             });
         });
 
-        durationSlider.addEventListener('input', () => {
-            selectedDuration = parseInt(durationSlider.value);
-            durationValue.textContent = selectedDuration;
-        });
-
-        document.getElementById('startBtn').addEventListener('click', startMeditation);
-        pauseBtn.addEventListener('click', togglePause);
-        document.getElementById('stopBtn').addEventListener('click', stopMeditation);
-        document.getElementById('againBtn').addEventListener('click', () => showView(setupView));
-
-        timerToggle.addEventListener('click', () => {
-            timerVisible = !timerVisible;
-            timer.classList.toggle('hidden', !timerVisible);
-            timerToggle.classList.toggle('hidden', !timerVisible);
-        });
-
-        bellsToggle.addEventListener('click', () => {
-            bellsEnabled = !bellsEnabled;
-            bellsToggle.classList.toggle('active', bellsEnabled);
-        });
-
-        // Initialize progress ring
-        updateProgress();
+        // Initialize
+        initChipHandlers();
     </script>
 </body>
 </html>
