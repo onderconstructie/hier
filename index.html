@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stilte – Meditatie</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='16' cy='16' r='12' fill='%23f0fdf4' stroke='%2310b981' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='4' fill='%2310b981'/%3E%3C/svg%3E">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --slate-50: #f8fafc;
+            --slate-100: #f1f5f9;
+            --slate-200: #e2e8f0;
+            --slate-300: #cbd5e1;
+            --slate-400: #94a3b8;
+            --slate-500: #64748b;
+            --slate-600: #475569;
+            --slate-700: #334155;
+            --slate-800: #1e293b;
+            --white: #ffffff;
+            --accent: #10b981;
+            --accent-light: #d1fae5;
+            --accent-dark: #065f46;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', system-ui, sans-serif;
+            background: var(--slate-50);
+            color: var(--slate-700);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            overflow: hidden;
+            transition: background 1s ease;
+        }
+
+        body.meditating {
+            background: var(--slate-800);
+        }
+
+        /* Header */
+        .header {
+            padding: 1.25rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            transition: opacity 0.5s;
+        }
+
+        body.meditating .header {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo {
+            width: 36px;
+            height: 36px;
+        }
+
+        .logo svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .header h1 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--slate-800);
+        }
+
+        /* Main */
+        .main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 1.5rem;
+        }
+
+        /* Views */
+        .view {
+            display: none;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .view.active {
+            display: block;
+            animation: fadeIn 0.6s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Ambient selection */
+        .ambient-row {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .ambient-btn {
+            width: 72px;
+            height: 72px;
+            background: var(--white);
+            border: 2px solid var(--slate-200);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+        }
+
+        .ambient-btn:hover {
+            border-color: var(--accent);
+            background: var(--accent-light);
+        }
+
+        .ambient-btn.selected {
+            border-color: var(--accent);
+            background: var(--accent);
+        }
+
+        .ambient-btn svg {
+            width: 28px;
+            height: 28px;
+            color: var(--slate-500);
+            transition: all 0.2s;
+        }
+
+        .ambient-btn:hover svg {
+            color: var(--accent);
+        }
+
+        .ambient-btn.selected svg {
+            color: var(--white);
+        }
+
+        /* Duration slider */
+        .duration-container {
+            margin-bottom: 2.5rem;
+        }
+
+        .duration-display {
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--slate-800);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .duration-display span {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: var(--slate-400);
+        }
+
+        .duration-slider {
+            width: 100%;
+            max-width: 280px;
+            height: 8px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: var(--slate-200);
+            border-radius: 4px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .duration-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 28px;
+            height: 28px;
+            background: var(--accent);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+            transition: transform 0.2s;
+        }
+
+        .duration-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+        }
+
+        .duration-slider::-moz-range-thumb {
+            width: 28px;
+            height: 28px;
+            background: var(--accent);
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+        }
+
+        /* Start button */
+        .start-btn {
+            width: 100px;
+            height: 100px;
+            background: var(--accent);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            box-shadow: 0 8px 32px rgba(16, 185, 129, 0.3);
+        }
+
+        .start-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 40px rgba(16, 185, 129, 0.4);
+        }
+
+        .start-btn svg {
+            width: 40px;
+            height: 40px;
+            color: var(--white);
+        }
+
+        /* Meditation view */
+        #meditationView {
+            max-width: none;
+            position: fixed;
+            inset: 0;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #meditationView.active {
+            display: flex;
+        }
+
+        /* Focus orb */
+        .orb-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin-bottom: 3rem;
+        }
+
+        .orb {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 35% 35%, 
+                rgba(16, 185, 129, 0.8), 
+                rgba(16, 185, 129, 0.4) 40%,
+                rgba(16, 185, 129, 0.1) 70%,
+                transparent);
+            border-radius: 50%;
+            animation: pulse 8s ease-in-out infinite;
+            filter: blur(1px);
+        }
+
+        .orb::before {
+            content: '';
+            position: absolute;
+            inset: 20%;
+            background: radial-gradient(circle at 40% 40%, 
+                rgba(255, 255, 255, 0.9),
+                rgba(16, 185, 129, 0.6) 50%,
+                transparent);
+            border-radius: 50%;
+            filter: blur(2px);
+        }
+
+        .orb-glow {
+            position: absolute;
+            inset: -30px;
+            background: radial-gradient(circle, 
+                rgba(16, 185, 129, 0.15) 0%,
+                transparent 70%);
+            border-radius: 50%;
+            animation: glowPulse 8s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.08); opacity: 1; }
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+        }
+
+        /* Timer */
+        .timer {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.6);
+            font-variant-numeric: tabular-nums;
+            margin-bottom: 3rem;
+            transition: opacity 0.3s;
+        }
+
+        .timer.hidden {
+            opacity: 0;
+        }
+
+        /* Controls */
+        .med-controls {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .med-btn {
+            width: 56px;
+            height: 56px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            backdrop-filter: blur(10px);
+        }
+
+        .med-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .med-btn svg {
+            width: 24px;
+            height: 24px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .med-btn.primary {
+            width: 64px;
+            height: 64px;
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .med-btn.primary:hover {
+            background: var(--accent-dark);
+            border-color: var(--accent-dark);
+        }
+
+        .med-btn.primary svg {
+            color: var(--white);
+            width: 28px;
+            height: 28px;
+        }
+
+        /* Progress ring around orb */
+        .progress-ring {
+            position: absolute;
+            inset: -15px;
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring circle {
+            fill: none;
+            stroke-width: 3;
+        }
+
+        .progress-ring .bg {
+            stroke: rgba(255, 255, 255, 0.1);
+        }
+
+        .progress-ring .progress {
+            stroke: var(--accent);
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s linear;
+            opacity: 0.6;
+        }
+
+        /* Complete view */
+        .complete-orb {
+            width: 120px;
+            height: 120px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            animation: completeIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 12px 40px rgba(16, 185, 129, 0.3);
+        }
+
+        @keyframes completeIn {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .complete-orb svg {
+            width: 56px;
+            height: 56px;
+            color: var(--white);
+        }
+
+        .complete-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .complete-stat {
+            text-align: center;
+        }
+
+        .complete-stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            line-height: 1;
+        }
+
+        .complete-stat-icon {
+            width: 28px;
+            height: 28px;
+            color: var(--slate-400);
+            margin: 0.5rem auto 0;
+        }
+
+        .again-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            background: var(--accent);
+            color: var(--white);
+            border: none;
+            border-radius: 16px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .again-btn:hover {
+            background: var(--accent-dark);
+            transform: translateY(-2px);
+        }
+
+        .again-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Interval bells indicator */
+        .bells-toggle {
+            position: fixed;
+            bottom: 1.5rem;
+            left: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--white);
+            border: 2px solid var(--slate-200);
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.2s;
+            z-index: 50;
+        }
+
+        .bells-toggle:hover {
+            border-color: var(--accent);
+        }
+
+        .bells-toggle.active {
+            background: var(--accent-light);
+            border-color: var(--accent);
+        }
+
+        .bells-toggle svg {
+            width: 20px;
+            height: 20px;
+            color: var(--slate-500);
+        }
+
+        .bells-toggle.active svg {
+            color: var(--accent);
+        }
+
+        .bells-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .bells-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--slate-300);
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+
+        .bells-toggle.active .bells-dot {
+            background: var(--accent);
+        }
+
+        body.meditating .bells-toggle {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        body.meditating .bells-toggle svg {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        body.meditating .bells-toggle .bells-dot {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        body.meditating .bells-toggle.active {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: var(--accent);
+        }
+
+        body.meditating .bells-toggle.active svg {
+            color: var(--accent);
+        }
+
+        body.meditating .bells-toggle.active .bells-dot {
+            background: var(--accent);
+        }
+
+        /* Hide timer toggle */
+        .timer-toggle {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            z-index: 50;
+        }
+
+        body.meditating .timer-toggle {
+            display: flex;
+        }
+
+        .timer-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .timer-toggle svg {
+            width: 22px;
+            height: 22px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .timer-toggle.hidden svg {
+            opacity: 0.4;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .ambient-btn {
+                width: 64px;
+                height: 64px;
+            }
+
+            .ambient-btn svg {
+                width: 24px;
+                height: 24px;
+            }
+
+            .duration-display {
+                font-size: 3rem;
+            }
+
+            .start-btn {
+                width: 88px;
+                height: 88px;
+            }
+
+            .start-btn svg {
+                width: 36px;
+                height: 36px;
+            }
+
+            .orb-container {
+                width: 160px;
+                height: 160px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <svg viewBox="0 0 40 40" fill="none">
+                    <circle cx="20" cy="20" r="14" fill="#f0fdf4" stroke="#10b981" stroke-width="2"/>
+                    <circle cx="20" cy="20" r="5" fill="#10b981"/>
+                </svg>
+            </div>
+            <h1>Stilte</h1>
+        </div>
+    </header>
+
+    <main class="main">
+        <!-- Setup view -->
+        <div class="view active" id="setupView">
+            <!-- Ambient sounds -->
+            <div class="ambient-row">
+                <button class="ambient-btn selected" data-ambient="silence" title="Stilte">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                </button>
+                <button class="ambient-btn" data-ambient="rain" title="Regen">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 13v8"/>
+                        <path d="M8 13v8"/>
+                        <path d="M12 15v8"/>
+                        <path d="M20 16.58A5 5 0 0 0 18 7h-1.26A8 8 0 1 0 4 15.25"/>
+                    </svg>
+                </button>
+                <button class="ambient-btn" data-ambient="waves" title="Golven">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>
+                        <path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>
+                        <path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>
+                    </svg>
+                </button>
+                <button class="ambient-btn" data-ambient="forest" title="Bos">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22v-7"/>
+                        <path d="M9 22h6"/>
+                        <path d="M12 15a7 7 0 1 0 0-14 7 7 0 0 0 0 14z"/>
+                    </svg>
+                </button>
+                <button class="ambient-btn" data-ambient="fire" title="Vuur">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Duration -->
+            <div class="duration-container">
+                <div class="duration-display">
+                    <span id="durationValue">10</span> <span>min</span>
+                </div>
+                <input type="range" class="duration-slider" id="durationSlider" min="1" max="60" value="10">
+            </div>
+
+            <!-- Start -->
+            <button class="start-btn" id="startBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <circle cx="12" cy="12" r="3"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Meditation view -->
+        <div class="view" id="meditationView">
+            <div class="orb-container">
+                <div class="orb-glow"></div>
+                <div class="orb"></div>
+                <svg class="progress-ring" viewBox="0 0 230 230">
+                    <circle class="bg" cx="115" cy="115" r="110"/>
+                    <circle class="progress" id="progressCircle" cx="115" cy="115" r="110"/>
+                </svg>
+            </div>
+            
+            <div class="timer" id="timer">10:00</div>
+            
+            <div class="med-controls">
+                <button class="med-btn" id="stopBtn" title="Stop">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="6" y="6" width="12" height="12" rx="1"/>
+                    </svg>
+                </button>
+                <button class="med-btn primary" id="pauseBtn" title="Pauze">
+                    <svg viewBox="0 0 24 24" fill="currentColor" id="pauseIcon">
+                        <rect x="6" y="4" width="4" height="16" rx="1"/>
+                        <rect x="14" y="4" width="4" height="16" rx="1"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Complete view -->
+        <div class="view" id="completeView">
+            <div class="complete-orb">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 6L9 17l-5-5"/>
+                </svg>
+            </div>
+            
+            <div class="complete-stats">
+                <div class="complete-stat">
+                    <div class="complete-stat-value" id="statMinutes">10</div>
+                    <svg class="complete-stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                </div>
+            </div>
+            
+            <button class="again-btn" id="againBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                    <path d="M3 3v5h5"/>
+                </svg>
+                Opnieuw
+            </button>
+        </div>
+    </main>
+
+    <!-- Interval bells toggle -->
+    <button class="bells-toggle" id="bellsToggle" title="Interval bellen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+        </svg>
+        <div class="bells-dots">
+            <div class="bells-dot"></div>
+            <div class="bells-dot"></div>
+            <div class="bells-dot"></div>
+        </div>
+    </button>
+
+    <!-- Timer visibility toggle -->
+    <button class="timer-toggle" id="timerToggle" title="Timer tonen/verbergen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+        </svg>
+    </button>
+
+    <script>
+        // State
+        let selectedAmbient = 'silence';
+        let selectedDuration = 10;
+        let timeRemaining = 600;
+        let totalTime = 600;
+        let isRunning = false;
+        let isPaused = false;
+        let timerInterval = null;
+        let timerVisible = true;
+        let bellsEnabled = false;
+        let bellInterval = null;
+
+        // Audio
+        let audioCtx = null;
+        let ambientSource = null;
+        let ambientGain = null;
+        let noiseBuffer = null;
+
+        // Elements
+        const setupView = document.getElementById('setupView');
+        const meditationView = document.getElementById('meditationView');
+        const completeView = document.getElementById('completeView');
+        const durationSlider = document.getElementById('durationSlider');
+        const durationValue = document.getElementById('durationValue');
+        const timer = document.getElementById('timer');
+        const progressCircle = document.getElementById('progressCircle');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const pauseIcon = document.getElementById('pauseIcon');
+        const timerToggle = document.getElementById('timerToggle');
+        const bellsToggle = document.getElementById('bellsToggle');
+
+        // Initialize audio
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                createNoiseBuffer();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        // Create white/pink noise buffer
+        function createNoiseBuffer() {
+            const bufferSize = audioCtx.sampleRate * 2;
+            noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+            const data = noiseBuffer.getChannelData(0);
+            
+            let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+            for (let i = 0; i < bufferSize; i++) {
+                const white = Math.random() * 2 - 1;
+                b0 = 0.99886 * b0 + white * 0.0555179;
+                b1 = 0.99332 * b1 + white * 0.0750759;
+                b2 = 0.96900 * b2 + white * 0.1538520;
+                b3 = 0.86650 * b3 + white * 0.3104856;
+                b4 = 0.55000 * b4 + white * 0.5329522;
+                b5 = -0.7616 * b5 - white * 0.0168980;
+                data[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.11;
+                b6 = white * 0.115926;
+            }
+        }
+
+        // Play singing bowl / gong
+        function playBell(type = 'start') {
+            if (!audioCtx) return;
+            
+            const now = audioCtx.currentTime;
+            const osc1 = audioCtx.createOscillator();
+            const osc2 = audioCtx.createOscillator();
+            const osc3 = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            
+            // Bell frequencies
+            const baseFreq = type === 'start' ? 220 : type === 'end' ? 261.63 : 196;
+            osc1.frequency.value = baseFreq;
+            osc2.frequency.value = baseFreq * 2.5;
+            osc3.frequency.value = baseFreq * 4;
+            
+            osc1.type = 'sine';
+            osc2.type = 'sine';
+            osc3.type = 'sine';
+            
+            const gain1 = audioCtx.createGain();
+            const gain2 = audioCtx.createGain();
+            const gain3 = audioCtx.createGain();
+            
+            osc1.connect(gain1);
+            osc2.connect(gain2);
+            osc3.connect(gain3);
+            gain1.connect(gain);
+            gain2.connect(gain);
+            gain3.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            // Envelope
+            const attackTime = 0.01;
+            const decayTime = type === 'end' ? 4 : 3;
+            const volume = 0.15;
+            
+            gain1.gain.setValueAtTime(0, now);
+            gain1.gain.linearRampToValueAtTime(volume, now + attackTime);
+            gain1.gain.exponentialRampToValueAtTime(0.001, now + decayTime);
+            
+            gain2.gain.setValueAtTime(0, now);
+            gain2.gain.linearRampToValueAtTime(volume * 0.3, now + attackTime);
+            gain2.gain.exponentialRampToValueAtTime(0.001, now + decayTime * 0.7);
+            
+            gain3.gain.setValueAtTime(0, now);
+            gain3.gain.linearRampToValueAtTime(volume * 0.1, now + attackTime);
+            gain3.gain.exponentialRampToValueAtTime(0.001, now + decayTime * 0.5);
+            
+            osc1.start(now);
+            osc2.start(now);
+            osc3.start(now);
+            osc1.stop(now + decayTime);
+            osc2.stop(now + decayTime);
+            osc3.stop(now + decayTime);
+        }
+
+        // Ambient sound generators
+        const ambientGenerators = {
+            silence: () => {},
+            
+            rain: () => {
+                if (!noiseBuffer) return;
+                
+                const source = audioCtx.createBufferSource();
+                source.buffer = noiseBuffer;
+                source.loop = true;
+                
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.value = 800;
+                
+                const gain = audioCtx.createGain();
+                gain.gain.value = 0.3;
+                
+                source.connect(filter);
+                filter.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                source.start();
+                ambientSource = source;
+                ambientGain = gain;
+            },
+            
+            waves: () => {
+                if (!noiseBuffer) return;
+                
+                const source = audioCtx.createBufferSource();
+                source.buffer = noiseBuffer;
+                source.loop = true;
+                
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.value = 400;
+                
+                const gain = audioCtx.createGain();
+                
+                // Wave modulation
+                const lfo = audioCtx.createOscillator();
+                const lfoGain = audioCtx.createGain();
+                lfo.frequency.value = 0.08;
+                lfoGain.gain.value = 0.15;
+                lfo.connect(lfoGain);
+                lfoGain.connect(gain.gain);
+                gain.gain.value = 0.2;
+                lfo.start();
+                
+                source.connect(filter);
+                filter.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                source.start();
+                ambientSource = source;
+                ambientGain = gain;
+            },
+            
+            forest: () => {
+                if (!noiseBuffer) return;
+                
+                const source = audioCtx.createBufferSource();
+                source.buffer = noiseBuffer;
+                source.loop = true;
+                
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'bandpass';
+                filter.frequency.value = 2000;
+                filter.Q.value = 0.5;
+                
+                const gain = audioCtx.createGain();
+                gain.gain.value = 0.08;
+                
+                source.connect(filter);
+                filter.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                source.start();
+                ambientSource = source;
+                ambientGain = gain;
+            },
+            
+            fire: () => {
+                if (!noiseBuffer) return;
+                
+                const source = audioCtx.createBufferSource();
+                source.buffer = noiseBuffer;
+                source.loop = true;
+                
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.value = 600;
+                
+                // Crackle modulation
+                const lfo = audioCtx.createOscillator();
+                const lfoGain = audioCtx.createGain();
+                lfo.type = 'square';
+                lfo.frequency.value = 3 + Math.random() * 5;
+                lfoGain.gain.value = 0.1;
+                
+                const gain = audioCtx.createGain();
+                gain.gain.value = 0.2;
+                
+                lfo.connect(lfoGain);
+                lfoGain.connect(gain.gain);
+                lfo.start();
+                
+                source.connect(filter);
+                filter.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                source.start();
+                ambientSource = source;
+                ambientGain = gain;
+            }
+        };
+
+        function startAmbient() {
+            stopAmbient();
+            if (selectedAmbient !== 'silence' && ambientGenerators[selectedAmbient]) {
+                ambientGenerators[selectedAmbient]();
+            }
+        }
+
+        function stopAmbient() {
+            if (ambientSource) {
+                try {
+                    ambientSource.stop();
+                } catch (e) {}
+                ambientSource = null;
+            }
+        }
+
+        // Format time
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Update progress ring
+        function updateProgress() {
+            const circumference = 2 * Math.PI * 110;
+            const progress = timeRemaining / totalTime;
+            const offset = circumference * (1 - progress);
+            progressCircle.style.strokeDasharray = circumference;
+            progressCircle.style.strokeDashoffset = offset;
+        }
+
+        // Show view
+        function showView(view) {
+            [setupView, meditationView, completeView].forEach(v => v.classList.remove('active'));
+            view.classList.add('active');
+            document.body.classList.toggle('meditating', view === meditationView);
+        }
+
+        // Start meditation
+        function startMeditation() {
+            initAudio();
+            
+            totalTime = selectedDuration * 60;
+            timeRemaining = totalTime;
+            isRunning = true;
+            isPaused = false;
+            
+            timer.textContent = formatTime(timeRemaining);
+            updateProgress();
+            showView(meditationView);
+            
+            // Play start bell
+            setTimeout(() => playBell('start'), 500);
+            
+            // Start ambient
+            setTimeout(() => startAmbient(), 1500);
+            
+            // Setup interval bells
+            if (bellsEnabled && selectedDuration >= 5) {
+                const intervalTime = Math.floor(totalTime / 3);
+                bellInterval = setInterval(() => {
+                    if (isRunning && !isPaused && timeRemaining > 30) {
+                        playBell('interval');
+                    }
+                }, intervalTime * 1000);
+            }
+            
+            // Start timer
+            timerInterval = setInterval(() => {
+                if (!isPaused) {
+                    timeRemaining--;
+                    timer.textContent = formatTime(timeRemaining);
+                    updateProgress();
+                    
+                    if (timeRemaining <= 0) {
+                        completeMeditation();
+                    }
+                }
+            }, 1000);
+        }
+
+        // Pause/resume
+        function togglePause() {
+            isPaused = !isPaused;
+            
+            if (isPaused) {
+                pauseIcon.innerHTML = '<polygon points="5 3 19 12 5 21 5 3"/>';
+                if (ambientGain) ambientGain.gain.value = 0;
+            } else {
+                pauseIcon.innerHTML = '<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>';
+                if (ambientGain) ambientGain.gain.value = 0.2;
+            }
+        }
+
+        // Stop
+        function stopMeditation() {
+            isRunning = false;
+            clearInterval(timerInterval);
+            clearInterval(bellInterval);
+            stopAmbient();
+            showView(setupView);
+        }
+
+        // Complete
+        function completeMeditation() {
+            isRunning = false;
+            clearInterval(timerInterval);
+            clearInterval(bellInterval);
+            stopAmbient();
+            
+            // Play end bells (3 times)
+            playBell('end');
+            setTimeout(() => playBell('end'), 1500);
+            setTimeout(() => playBell('end'), 3000);
+            
+            document.getElementById('statMinutes').textContent = selectedDuration;
+            
+            setTimeout(() => showView(completeView), 500);
+        }
+
+        // Event listeners
+        document.querySelectorAll('.ambient-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.ambient-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                selectedAmbient = btn.dataset.ambient;
+            });
+        });
+
+        durationSlider.addEventListener('input', () => {
+            selectedDuration = parseInt(durationSlider.value);
+            durationValue.textContent = selectedDuration;
+        });
+
+        document.getElementById('startBtn').addEventListener('click', startMeditation);
+        pauseBtn.addEventListener('click', togglePause);
+        document.getElementById('stopBtn').addEventListener('click', stopMeditation);
+        document.getElementById('againBtn').addEventListener('click', () => showView(setupView));
+
+        timerToggle.addEventListener('click', () => {
+            timerVisible = !timerVisible;
+            timer.classList.toggle('hidden', !timerVisible);
+            timerToggle.classList.toggle('hidden', !timerVisible);
+        });
+
+        bellsToggle.addEventListener('click', () => {
+            bellsEnabled = !bellsEnabled;
+            bellsToggle.classList.toggle('active', bellsEnabled);
+        });
+
+        // Initialize progress ring
+        updateProgress();
+    </script>
+</body>
+</html>
