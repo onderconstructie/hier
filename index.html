@@ -10,7 +10,7 @@
     <meta name="oc:labels" content="aarden">
     <meta name="oc:kort" content="Tot rust komen via wat je ziet, hoort en voelt">
     <meta name="oc:volgorde" content="150">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox=&quot;0 0 40 40&quot; fill=&quot;none&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E %3Ccircle cx=&quot;20&quot; cy=&quot;20&quot; r=&quot;18&quot; fill=&quot;%23d1fae5&quot; stroke=&quot;%2310b981&quot; stroke-width=&quot;2&quot;/%3E %3Crect x=&quot;14&quot; y=&quot;12&quot; width=&quot;4&quot; height=&quot;16&quot; rx=&quot;2&quot; fill=&quot;%2310b981&quot;/%3E %3Crect x=&quot;22&quot; y=&quot;12&quot; width=&quot;4&quot; height=&quot;16&quot; rx=&quot;2&quot; fill=&quot;%2310b981&quot;/%3E %3C/svg%3E">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox=&quot;0 0 40 40&quot; fill=&quot;none&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Ccircle cx=&quot;20&quot; cy=&quot;20&quot; r=&quot;18&quot; fill=&quot;%23f8fafc&quot; stroke=&quot;%23e2e8f0&quot; stroke-width=&quot;1.5&quot;/%3E%3Cpath d=&quot;M20 29 C20 29 12.5 21.5 12.5 16.5 A7.5 7.5 0 0 1 27.5 16.5 C27.5 21.5 20 29 20 29 Z&quot; fill=&quot;%2310b981&quot;/%3E%3Ccircle cx=&quot;20&quot; cy=&quot;16.5&quot; r=&quot;2.8&quot; fill=&quot;%23f8fafc&quot;/%3E%3Cpath d=&quot;M11 31 H29&quot; stroke=&quot;%2394a3b8&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot;/%3E%3C/svg%3E">
     <link rel="stylesheet" href="/fonts/fonts.css">
     <style>
         :root {
@@ -351,14 +351,27 @@
             z-index: 10;
         }
 
-        .chip:hover::after,
-        .chip:hover::before,
         .chip:focus-visible::after,
-        .chip:focus-visible::before,
-        .chip.selected::after,
-        .chip.selected::before {
+        .chip:focus-visible::before {
             opacity: 1;
             visibility: visible;
+        }
+        @media (hover: hover) {
+            .chip:hover::after,
+            .chip:hover::before {
+                opacity: 1;
+                visibility: visible;
+            }
+        }
+
+        /* Namen van wat je koos, ook zichtbaar op een aanraakscherm */
+        .selection-counter .picked {
+            display: block;
+            min-height: 1.25rem;
+            margin-top: 0.25rem;
+            font-size: 0.8125rem;
+            color: #047857;
+            font-weight: 500;
         }
 
         /* Selection counter */
@@ -593,6 +606,7 @@
         .sense-btn svg {
             width: 22px;
             height: 22px;
+            overflow: visible;
             color: var(--slate-400);
             transition: all 0.2s;
         }
@@ -847,18 +861,14 @@
 </head>
 <body>
     <header class="header">
-        <a href="https://onderconstructie.github.io/reset/" class="back-link" aria-label="Terug naar Reset">
+        <a href="../reset/" class="back-link" aria-label="Terug naar Reset">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M19 12H5M12 19l-7-7 7-7"/>
             </svg>
             Reset
         </a>
         <div class="logo">
-            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <circle cx="20" cy="20" r="18" fill="#f0fdf4" stroke="#10b981" stroke-width="1.5"/>
-                <rect x="14" y="12" width="4" height="16" rx="1.5" fill="#10b981"/>
-                <rect x="22" y="12" width="4" height="16" rx="1.5" fill="#10b981"/>
-            </svg>
+            <svg aria-hidden="true" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="20" cy="20" r="18" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/><path d="M20 29 C20 29 12.5 21.5 12.5 16.5 A7.5 7.5 0 0 1 27.5 16.5 C27.5 21.5 20 29 20 29 Z" fill="#10b981"/><circle cx="20" cy="16.5" r="2.8" fill="#f8fafc"/><path d="M11 31 H29" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/></svg>
         </div>
         <h1 class="title">Hier &amp; Nu</h1>
         <p class="subtitle">Tot rust komen via wat je ziet, hoort en voelt</p>
@@ -869,7 +879,7 @@
             <!-- Intro view -->
             <div class="step-view active" id="introView">
                 <div class="intro">
-                    <h2>5-4-3-2-1 oefening</h2>
+                    <h2>Vijf zintuigen, één voor één</h2>
                     <p>Voel je je onrustig of overweldigd? Deze oefening brengt je aandacht terug naar het hier en nu via je zintuigen.</p>
                     <button class="btn btn-primary" id="startBtn">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -900,7 +910,7 @@
                     <h3 class="step-title">5 dingen die je ziet</h3>
                     <p class="step-subtitle">Kijk om je heen. Wat valt je op?</p>
                 </div>
-                <p class="selection-counter">Gekozen: <span id="count1">0</span> / 5</p>
+                <p class="selection-counter">Gekozen: <span id="count1">0</span> / 5<span class="picked" id="picked1" aria-live="polite"></span></p>
                 <div class="chip-grid" id="chips1" data-required="5">
                     <div class="chip" title="Scherm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
                     <div class="chip" title="Raam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="3" x2="12" y2="21"/><line x1="3" y1="12" x2="21" y2="12"/></svg></div>
@@ -940,18 +950,14 @@
                     <div class="progress-step">1</div>
                 </div>
                 <div class="sense-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
-                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-                        <line x1="12" y1="19" x2="12" y2="22"/>
-                    </svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8.5a6.5 6.5 0 1 1 13 0c0 6-6 6-6 10a3.5 3.5 0 1 1-7 0"/><path d="M15 8.5a2.5 2.5 0 0 0-5 0v1a2 2 0 1 1 0 4"/></svg>
                 </div>
                 <div class="step-header">
                     <p class="step-count">Stap 2 van 5</p>
                     <h3 class="step-title">4 dingen die je hoort</h3>
                     <p class="step-subtitle">Luister aandachtig. Welke geluiden zijn er?</p>
                 </div>
-                <p class="selection-counter">Gekozen: <span id="count2">0</span> / 4</p>
+                <p class="selection-counter">Gekozen: <span id="count2">0</span> / 4<span class="picked" id="picked2" aria-live="polite"></span></p>
                 <div class="chip-grid" id="chips2" data-required="4">
                     <div class="chip" title="Ademhaling"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c4-3 7-6 7-10a7 7 0 1 0-14 0c0 4 3 7 7 10z"/></svg></div>
                     <div class="chip" title="Verkeer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h14v-5l-2-5H7l-2 5v5z"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="16.5" cy="17.5" r="2.5"/></svg></div>
@@ -993,7 +999,7 @@
                     <h3 class="step-title">3 dingen die je voelt</h3>
                     <p class="step-subtitle">Fysieke sensaties. Wat raakt je huid?</p>
                 </div>
-                <p class="selection-counter">Gekozen: <span id="count3">0</span> / 3</p>
+                <p class="selection-counter">Gekozen: <span id="count3">0</span> / 3<span class="picked" id="picked3" aria-live="polite"></span></p>
                 <div class="chip-grid" id="chips3" data-required="3">
                     <div class="chip" title="Stoel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 11h14v4H5z"/><path d="M6 15v6"/><path d="M18 15v6"/><path d="M6 11V7a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4"/></svg></div>
                     <div class="chip" title="Voeten"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16c0-3 2-5 5-5a5 5 0 0 1 3.5 1.5l3 3a2.5 2.5 0 0 1-3.5 3.5l-1-1"/><circle cx="7" cy="9" r="2"/><circle cx="11" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="18" cy="9" r="1.5"/></svg></div>
@@ -1023,20 +1029,14 @@
                     <div class="progress-step">1</div>
                 </div>
                 <div class="sense-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M2 12h6"/>
-                        <path d="M22 12h-6"/>
-                        <path d="M12 2v6"/>
-                        <path d="M12 22v-6"/>
-                        <circle cx="12" cy="12" r="4"/>
-                    </svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c0 4-1 7-4 10.5a3.2 3.2 0 0 0 2.3 5.5c.9 0 1.7-.5 1.7-.5s.8.5 1.7.5a3.2 3.2 0 0 0 2.3-5.5"/><path d="M9.5 19a2.5 2.5 0 0 1 0-1.5M14.5 19a2.5 2.5 0 0 0 0-1.5"/></svg>
                 </div>
                 <div class="step-header">
                     <p class="step-count">Stap 4 van 5</p>
                     <h3 class="step-title">2 dingen die je ruikt</h3>
                     <p class="step-subtitle">Adem in. Welke geuren zijn er?</p>
                 </div>
-                <p class="selection-counter">Gekozen: <span id="count4">0</span> / 2</p>
+                <p class="selection-counter">Gekozen: <span id="count4">0</span> / 2<span class="picked" id="picked4" aria-live="polite"></span></p>
                 <div class="chip-grid" id="chips4" data-required="2">
                     <div class="chip" title="Koffie"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg></div>
                     <div class="chip" title="Thee"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z"/></svg></div>
@@ -1067,19 +1067,14 @@
                     <div class="progress-step active">1</div>
                 </div>
                 <div class="sense-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 8c-2.5 0-4 1.5-4 3 0 2 2 3 2 5"/>
-                        <path d="M10 19h4"/>
-                        <path d="M12 22v-3"/>
-                        <path d="M7 8a5 5 0 0 1 10 0"/>
-                    </svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 11c2.5-3 6-4 9.5-2 3.5-2 7-1 9.5 2-2.5 5-6 7.5-9.5 7.5S5 16 2.5 11Z"/><path d="M2.5 11h19"/><path d="M9 11v1.5a3 3 0 0 0 6 0V11"/></svg>
                 </div>
                 <div class="step-header">
                     <p class="step-count">Stap 5 van 5</p>
                     <h3 class="step-title">1 ding dat je proeft</h3>
                     <p class="step-subtitle">Wat proef je nu?</p>
                 </div>
-                <p class="selection-counter">Gekozen: <span id="count5">0</span> / 1</p>
+                <p class="selection-counter">Gekozen: <span id="count5">0</span> / 1<span class="picked" id="picked5" aria-live="polite"></span></p>
                 <div class="chip-grid" id="chips5" data-required="1">
                     <div class="chip" title="Koffie"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg></div>
                     <div class="chip" title="Thee"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z"/></svg></div>
@@ -1299,6 +1294,9 @@
             const nextBtn = document.querySelector(`#step${step} .next-btn`);
             
             counter.textContent = selected;
+            const picked = document.getElementById(`picked${step}`);
+            if (picked) picked.textContent = Array.from(chipGrid.querySelectorAll('.chip.selected'))
+                .map(c => c.dataset.other ? 'Tekening' : c.getAttribute('title')).join(', ');
             nextBtn.disabled = selected < required;
             chipGrid.querySelectorAll('.chip').forEach(c => c.setAttribute('aria-pressed', c.classList.contains('selected')));
         }
@@ -1371,11 +1369,11 @@
         // Generate summary
         function generateSummary() {
             const senseIcons = {
-                see: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>',
-                hear: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>',
-                feel: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2"/><path d="M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8"/></svg>',
-                smell: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h6M22 12h-6M12 2v6M12 22v-6"/><circle cx="12" cy="12" r="4"/></svg>',
-                taste: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8c-2.5 0-4 1.5-4 3 0 2 2 3 2 5"/><path d="M10 19h4"/><path d="M7 8a5 5 0 0 1 10 0"/></svg>'
+                see: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>',
+                hear: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8.5a6.5 6.5 0 1 1 13 0c0 6-6 6-6 10a3.5 3.5 0 1 1-7 0"/><path d="M15 8.5a2.5 2.5 0 0 0-5 0v1a2 2 0 1 1 0 4"/></svg>',
+                feel: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2"/><path d="M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>',
+                smell: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c0 4-1 7-4 10.5a3.2 3.2 0 0 0 2.3 5.5c.9 0 1.7-.5 1.7-.5s.8.5 1.7.5a3.2 3.2 0 0 0 2.3-5.5"/><path d="M9.5 19a2.5 2.5 0 0 1 0-1.5M14.5 19a2.5 2.5 0 0 0 0-1.5"/></svg>',
+                taste: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 11c2.5-3 6-4 9.5-2 3.5-2 7-1 9.5 2-2.5 5-6 7.5-9.5 7.5S5 16 2.5 11Z"/><path d="M2.5 11h19"/><path d="M9 11v1.5a3 3 0 0 0 6 0V11"/></svg>'
             };
 
             const labels = {
@@ -1499,6 +1497,7 @@
             // Reset counters
             for (let step = 1; step <= 5; step++) {
                 document.getElementById(`count${step}`).textContent = '0';
+                document.getElementById(`picked${step}`).textContent = '';
                 document.querySelector(`#step${step} .next-btn`).disabled = true;
             }
             
