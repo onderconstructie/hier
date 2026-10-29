@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="color-scheme" content="light dark">
-    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#1e293b" media="(prefers-color-scheme: dark)">
+    <meta name="color-scheme" content="light">
+    <meta name="theme-color" content="#ffffff">
     <title>Hier &amp; Nu – Onder Constructie</title>
     <meta name="description" content="Een snelle en effectieve manier om te aarden bij stress of angst. Gebruik je zintuigen om direct uit je hoofd te komen.">
     <meta name="oc:groep" content="reset">
@@ -866,33 +865,7 @@
         }
     
         /* Donkere modus: rustig donker slate, groen accent */
-        @media (prefers-color-scheme: dark) {
-            :root {
-                color-scheme: dark;
-                --slate-50: #0f172a;
-                --slate-100: #273449;
-                --slate-200: #334155;
-                --slate-300: #475569;
-                --slate-400: #94a3b8;
-                --slate-500: #94a3b8;
-                --slate-600: #cbd5e1;
-                --slate-700: #e2e8f0;
-                --slate-800: #f1f5f9;
-                --white: #1e293b;
-                --accent-light: rgba(16, 185, 129, 0.18);
-                --accent-dark: #a7f3d0;
-                --ink: #a7f3d0;
-                --ring: #a7f3d0;
-            }
-            .logo svg circle:first-child { fill: #273449; stroke: #334155; }
-            .oc-medisch { color: var(--slate-500) !important; }
-            .card { box-shadow: none; }
-            .btn-primary:hover:not(:disabled) { background: #047857; box-shadow: 0 0 0 2px #10b981; }
-            .chip::after, .sense-btn::after, .all-icon-item::after { background: #334155; color: #f1f5f9; }
-            .chip::before { border-top-color: #334155; }
-            .modal-overlay { background: rgba(15, 23, 42, 0.75); }
-            .chip.selected { box-shadow: 0 0 0 2px #10b981; }
-        }
+        
 
         /* Hoog contrast: gekozen tegels en stappen krijgen een dikke rand */
         @media (forced-colors: active) {
