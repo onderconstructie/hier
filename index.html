@@ -392,6 +392,18 @@
             font-weight: 700;
             color: var(--ink);
         }
+        .selection-counter .hint-een {
+            display: block;
+            font-weight: 400;
+            color: var(--slate-500);
+            margin-bottom: 0.25rem;
+        }
+        .step-nav {
+            display: flex;
+            gap: 0.75rem;
+        }
+        .step-nav .prev-btn { flex: 0 0 auto; width: auto; padding-left: 1.25rem; padding-right: 1.25rem; }
+        .step-nav .next-btn { flex: 1; }
 
         /* Drawing modal */
         .modal-overlay {
@@ -913,7 +925,7 @@ html { -webkit-tap-highlight-color: transparent; }
             <div class="step-view active" id="introView">
                 <div class="intro">
                     <h2>Vijf zintuigen, één voor één</h2>
-                    <p>Voel je je onrustig of overweldigd? Deze oefening brengt je aandacht terug naar het hier en nu via je zintuigen.</p>
+                    <p>Even veel aan je hoofd? Sta stil bij wat je nu ziet, hoort, voelt, ruikt en proeft. Je kiest telkens wat je opmerkt. Er is geen goed of fout.</p>
                     <button class="btn btn-primary" id="startBtn">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M5 12h14M12 5l7 7-7 7"/>
@@ -926,11 +938,11 @@ html { -webkit-tap-highlight-color: transparent; }
             <!-- Step views -->
             <div class="step-view" id="step1">
                 <div class="progress-steps">
-                    <div class="progress-step active">5</div>
-                    <div class="progress-step">4</div>
-                    <div class="progress-step">3</div>
+                    <div class="progress-step active">1</div>
                     <div class="progress-step">2</div>
-                    <div class="progress-step">1</div>
+                    <div class="progress-step">3</div>
+                    <div class="progress-step">4</div>
+                    <div class="progress-step">5</div>
                 </div>
                 <div class="sense-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -940,11 +952,11 @@ html { -webkit-tap-highlight-color: transparent; }
                 </div>
                 <div class="step-header">
                     <p class="step-count">Stap 1 van 5</p>
-                    <h3 class="step-title">5 dingen die je ziet</h3>
-                    <p class="step-subtitle">Kijk om je heen. Wat valt je op?</p>
+                    <h3 class="step-title">Wat zie je?</h3>
+                    <p class="step-subtitle">Kijk rustig om je heen. Wat valt je op?</p>
                 </div>
-                <p class="selection-counter">Gekozen: <span id="count1">0</span> / 5<span class="picked" id="picked1" aria-live="polite"></span></p>
-                <div class="chip-grid" id="chips1" data-required="5">
+                <p class="selection-counter"><span class="hint-een">Kies wat je opmerkt. Eén is genoeg, meer mag.</span> Gekozen: <span id="count1">0</span><span class="picked" id="picked1" aria-live="polite"></span></p>
+                <div class="chip-grid" id="chips1" data-required="1">
                     <div class="chip" title="Scherm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
                     <div class="chip" title="Raam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="3" x2="12" y2="21"/><line x1="3" y1="12" x2="21" y2="12"/></svg></div>
                     <div class="chip" title="Lamp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg></div>
@@ -971,27 +983,27 @@ html { -webkit-tap-highlight-color: transparent; }
                     <div class="chip" title="Laptop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M2 20h20"/></svg></div>
                     <div class="chip other" title="Andere" data-other="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
                 </div>
-                <button class="btn btn-primary next-btn" data-step="1" data-next="2" disabled>Volgende</button>
+                <div class="step-nav"><button class="btn btn-secondary prev-btn" data-prev="introView">Vorige</button><button class="btn btn-primary next-btn" data-step="1" data-next="2" disabled>Volgende</button></div>
             </div>
 
             <div class="step-view" id="step2">
                 <div class="progress-steps">
-                    <div class="progress-step done">5</div>
-                    <div class="progress-step active">4</div>
+                    <div class="progress-step done">1</div>
+                    <div class="progress-step active">2</div>
                     <div class="progress-step">3</div>
-                    <div class="progress-step">2</div>
-                    <div class="progress-step">1</div>
+                    <div class="progress-step">4</div>
+                    <div class="progress-step">5</div>
                 </div>
                 <div class="sense-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8.5a6.5 6.5 0 1 1 13 0c0 6-6 6-6 10a3.5 3.5 0 1 1-7 0"/><path d="M15 8.5a2.5 2.5 0 0 0-5 0v1a2 2 0 1 1 0 4"/></svg>
                 </div>
                 <div class="step-header">
                     <p class="step-count">Stap 2 van 5</p>
-                    <h3 class="step-title">4 dingen die je hoort</h3>
-                    <p class="step-subtitle">Luister aandachtig. Welke geluiden zijn er?</p>
+                    <h3 class="step-title">Wat hoor je?</h3>
+                    <p class="step-subtitle">Luister even. Wat hoor je dichtbij, en wat veraf?</p>
                 </div>
-                <p class="selection-counter">Gekozen: <span id="count2">0</span> / 4<span class="picked" id="picked2" aria-live="polite"></span></p>
-                <div class="chip-grid" id="chips2" data-required="4">
+                <p class="selection-counter"><span class="hint-een">Kies wat je opmerkt. Eén is genoeg, meer mag.</span> Gekozen: <span id="count2">0</span><span class="picked" id="picked2" aria-live="polite"></span></p>
+                <div class="chip-grid" id="chips2" data-required="1">
                     <div class="chip" title="Ademhaling"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c4-3 7-6 7-10a7 7 0 1 0-14 0c0 4 3 7 7 10z"/></svg></div>
                     <div class="chip" title="Verkeer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h14v-5l-2-5H7l-2 5v5z"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="16.5" cy="17.5" r="2.5"/></svg></div>
                     <div class="chip" title="Muziek"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
@@ -1008,16 +1020,16 @@ html { -webkit-tap-highlight-color: transparent; }
                     <div class="chip" title="Stilte"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg></div>
                     <div class="chip other" title="Andere" data-other="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
                 </div>
-                <button class="btn btn-primary next-btn" data-step="2" data-next="3" disabled>Volgende</button>
+                <div class="step-nav"><button class="btn btn-secondary prev-btn" data-prev="step1">Vorige</button><button class="btn btn-primary next-btn" data-step="2" data-next="3" disabled>Volgende</button></div>
             </div>
 
             <div class="step-view" id="step3">
                 <div class="progress-steps">
-                    <div class="progress-step done">5</div>
-                    <div class="progress-step done">4</div>
+                    <div class="progress-step done">1</div>
+                    <div class="progress-step done">2</div>
                     <div class="progress-step active">3</div>
-                    <div class="progress-step">2</div>
-                    <div class="progress-step">1</div>
+                    <div class="progress-step">4</div>
+                    <div class="progress-step">5</div>
                 </div>
                 <div class="sense-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1029,11 +1041,11 @@ html { -webkit-tap-highlight-color: transparent; }
                 </div>
                 <div class="step-header">
                     <p class="step-count">Stap 3 van 5</p>
-                    <h3 class="step-title">3 dingen die je voelt</h3>
-                    <p class="step-subtitle">Fysieke sensaties. Wat raakt je huid?</p>
+                    <h3 class="step-title">Wat voel je?</h3>
+                    <p class="step-subtitle">Wat voel je op je huid of in je lichaam?</p>
                 </div>
-                <p class="selection-counter">Gekozen: <span id="count3">0</span> / 3<span class="picked" id="picked3" aria-live="polite"></span></p>
-                <div class="chip-grid" id="chips3" data-required="3">
+                <p class="selection-counter"><span class="hint-een">Kies wat je opmerkt. Eén is genoeg, meer mag.</span> Gekozen: <span id="count3">0</span><span class="picked" id="picked3" aria-live="polite"></span></p>
+                <div class="chip-grid" id="chips3" data-required="1">
                     <div class="chip" title="Stoel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 11h14v4H5z"/><path d="M6 15v6"/><path d="M18 15v6"/><path d="M6 11V7a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4"/></svg></div>
                     <div class="chip" title="Voeten"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16c0-3 2-5 5-5a5 5 0 0 1 3.5 1.5l3 3a2.5 2.5 0 0 1-3.5 3.5l-1-1"/><circle cx="7" cy="9" r="2"/><circle cx="11" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="18" cy="9" r="1.5"/></svg></div>
                     <div class="chip" title="Kleding"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg></div>
@@ -1050,27 +1062,27 @@ html { -webkit-tap-highlight-color: transparent; }
                     <div class="chip" title="Telefoon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg></div>
                     <div class="chip other" title="Andere" data-other="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
                 </div>
-                <button class="btn btn-primary next-btn" data-step="3" data-next="4" disabled>Volgende</button>
+                <div class="step-nav"><button class="btn btn-secondary prev-btn" data-prev="step2">Vorige</button><button class="btn btn-primary next-btn" data-step="3" data-next="4" disabled>Volgende</button></div>
             </div>
 
             <div class="step-view" id="step4">
                 <div class="progress-steps">
-                    <div class="progress-step done">5</div>
-                    <div class="progress-step done">4</div>
+                    <div class="progress-step done">1</div>
+                    <div class="progress-step done">2</div>
                     <div class="progress-step done">3</div>
-                    <div class="progress-step active">2</div>
-                    <div class="progress-step">1</div>
+                    <div class="progress-step active">4</div>
+                    <div class="progress-step">5</div>
                 </div>
                 <div class="sense-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c0 4-1 7-4 10.5a3.2 3.2 0 0 0 2.3 5.5c.9 0 1.7-.5 1.7-.5s.8.5 1.7.5a3.2 3.2 0 0 0 2.3-5.5"/><path d="M9.5 19a2.5 2.5 0 0 1 0-1.5M14.5 19a2.5 2.5 0 0 0 0-1.5"/></svg>
                 </div>
                 <div class="step-header">
                     <p class="step-count">Stap 4 van 5</p>
-                    <h3 class="step-title">2 dingen die je ruikt</h3>
-                    <p class="step-subtitle">Adem in. Welke geuren zijn er?</p>
+                    <h3 class="step-title">Wat ruik je?</h3>
+                    <p class="step-subtitle">Adem rustig in. Ruik je iets?</p>
                 </div>
-                <p class="selection-counter">Gekozen: <span id="count4">0</span> / 2<span class="picked" id="picked4" aria-live="polite"></span></p>
-                <div class="chip-grid" id="chips4" data-required="2">
+                <p class="selection-counter"><span class="hint-een">Kies wat je opmerkt. Eén is genoeg, meer mag.</span> Gekozen: <span id="count4">0</span><span class="picked" id="picked4" aria-live="polite"></span></p>
+                <div class="chip-grid" id="chips4" data-required="1">
                     <div class="chip" title="Koffie"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg></div>
                     <div class="chip" title="Thee"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z"/></svg></div>
                     <div class="chip" title="Frisse lucht"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/><path d="M12.6 19.4A2 2 0 1 0 14 16H2"/></svg></div>
@@ -1088,26 +1100,26 @@ html { -webkit-tap-highlight-color: transparent; }
                     <div class="chip" title="Niets"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></div>
                     <div class="chip other" title="Andere" data-other="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
                 </div>
-                <button class="btn btn-primary next-btn" data-step="4" data-next="5" disabled>Volgende</button>
+                <div class="step-nav"><button class="btn btn-secondary prev-btn" data-prev="step3">Vorige</button><button class="btn btn-primary next-btn" data-step="4" data-next="5" disabled>Volgende</button></div>
             </div>
 
             <div class="step-view" id="step5">
                 <div class="progress-steps">
-                    <div class="progress-step done">5</div>
-                    <div class="progress-step done">4</div>
-                    <div class="progress-step done">3</div>
+                    <div class="progress-step done">1</div>
                     <div class="progress-step done">2</div>
-                    <div class="progress-step active">1</div>
+                    <div class="progress-step done">3</div>
+                    <div class="progress-step done">4</div>
+                    <div class="progress-step active">5</div>
                 </div>
                 <div class="sense-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 11c2.5-3 6-4 9.5-2 3.5-2 7-1 9.5 2-2.5 5-6 7.5-9.5 7.5S5 16 2.5 11Z"/><path d="M2.5 11h19"/><path d="M9 11v1.5a3 3 0 0 0 6 0V11"/></svg>
                 </div>
                 <div class="step-header">
                     <p class="step-count">Stap 5 van 5</p>
-                    <h3 class="step-title">1 ding dat je proeft</h3>
-                    <p class="step-subtitle">Wat proef je nu?</p>
+                    <h3 class="step-title">Wat proef je?</h3>
+                    <p class="step-subtitle">Wat proef je nu, ook al is het weinig?</p>
                 </div>
-                <p class="selection-counter">Gekozen: <span id="count5">0</span> / 1<span class="picked" id="picked5" aria-live="polite"></span></p>
+                <p class="selection-counter"><span class="hint-een">Kies wat je opmerkt. Eén is genoeg, meer mag.</span> Gekozen: <span id="count5">0</span><span class="picked" id="picked5" aria-live="polite"></span></p>
                 <div class="chip-grid" id="chips5" data-required="1">
                     <div class="chip" title="Koffie"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg></div>
                     <div class="chip" title="Thee"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z"/></svg></div>
@@ -1126,7 +1138,7 @@ html { -webkit-tap-highlight-color: transparent; }
                     <div class="chip" title="Niets"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></div>
                     <div class="chip other" title="Andere" data-other="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
                 </div>
-                <button class="btn btn-primary next-btn" data-step="5" data-next="complete" disabled>Afronden</button>
+                <div class="step-nav"><button class="btn btn-secondary prev-btn" data-prev="step4">Vorige</button><button class="btn btn-primary next-btn" data-step="5" data-next="complete" disabled>Afronden</button></div>
             </div>
 
             <!-- Complete view -->
@@ -1137,7 +1149,7 @@ html { -webkit-tap-highlight-color: transparent; }
                     </svg>
                 </div>
                 <h3 class="complete-title">Je bent hier</h3>
-                <p class="complete-text">Je aandacht is terug in het nu. Neem even de tijd om dit gevoel vast te houden.</p>
+                <p class="complete-text">Je stond even stil bij wat er rond je is. Blijf gerust nog een moment zitten voor je verder gaat.</p>
                 
                 <div class="summary" id="summary"></div>
                 
@@ -1155,7 +1167,7 @@ html { -webkit-tap-highlight-color: transparent; }
     </main>
 
     <footer class="footer oc-footer">
-        <p class="quote oc-quote">Waar je aandacht gaat, gaat je energie.</p>
+        <p class="quote oc-quote">Kijk, luister, en laat de rest even wachten.</p>
         <p class="oc-medisch" style="font-size:0.75rem;color:#64748b;margin:0.5rem auto 0;max-width:30rem;line-height:1.5;text-align:center">Dit is geen medische behandeling of diagnose. Heb je klachten, zoek dan hulp via je huisarts of een psycholoog.</p>
     </footer>
 
@@ -1244,8 +1256,9 @@ html { -webkit-tap-highlight-color: transparent; }
             };
         }
 
+        let hasStroke = false;
         function startDraw(e) {
-            isDrawing = true;
+            isDrawing = true; hasStroke = true;
             const pos = getPos(e);
             lastX = pos.x;
             lastY = pos.y;
@@ -1282,6 +1295,7 @@ html { -webkit-tap-highlight-color: transparent; }
             initCanvas();
             modalClose.focus();
             ctx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
+            hasStroke = false;
         }
 
         function closeDrawModal() {
@@ -1297,9 +1311,11 @@ html { -webkit-tap-highlight-color: transparent; }
         modalClose.addEventListener('click', closeDrawModal);
         clearCanvas.addEventListener('click', () => {
             ctx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
+            hasStroke = false;
         });
 
         saveDrawing.addEventListener('click', () => {
+            if (!hasStroke) { closeDrawModal(); return; }   // niets getekend: niets bewaren
             const dataUrl = drawingCanvas.toDataURL('image/png');
             const sense = stepToSense[currentDrawingStep];
             drawings[sense].push(dataUrl);
@@ -1370,7 +1386,7 @@ html { -webkit-tap-highlight-color: transparent; }
                         
                         if (chip.classList.contains('selected')) {
                             chip.classList.remove('selected');
-                        } else if (selected.length < required) {
+                        } else {
                             chip.classList.add('selected');
                         }
                         
@@ -1541,6 +1557,11 @@ html { -webkit-tap-highlight-color: transparent; }
         // Event listeners
         startBtn.addEventListener('click', () => showStep('step1'));
         restartBtn.addEventListener('click', reset);
+
+        // Vorige: terug naar de vorige stap, je keuzes blijven staan
+        document.querySelectorAll('.prev-btn').forEach(btn => {
+            btn.addEventListener('click', () => showStep(btn.dataset.prev));
+        });
 
         // Next buttons
         document.querySelectorAll('.next-btn').forEach(btn => {
