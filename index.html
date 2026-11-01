@@ -474,9 +474,15 @@
         .drawing-canvas {
             display: block;
             width: 100%;
-            height: 200px;
+            height: 240px;
             cursor: crosshair;
+            touch-action: none;
+            -webkit-user-select: none;
+            user-select: none;
         }
+        /* Tekening als prentje in de tegel Andere */
+        .chip.other .chip-thumb { width: 34px; height: 34px; object-fit: contain; border-radius: 4px; background: var(--wit, #fff); display: block; }
+        .chip.other.has-drawing svg { display: none; }
 
         .modal-actions {
             display: flex;
@@ -1210,7 +1216,7 @@ header.header h1 + p, header.header h1 + p.subtitle, .oc-head h1 + p, .oc-head h
             </div>
             <div class="modal-actions">
                 <button class="btn btn-secondary" id="clearCanvas">Wissen</button>
-                <button class="btn btn-primary" id="saveDrawing">Opslaan</button>
+                <button class="btn btn-primary" id="saveDrawing">Klaar</button>
             </div>
         </div>
     </div>
@@ -1258,60 +1264,53 @@ header.header h1 + p, header.header h1 + p.subtitle, .oc-head h1 + p, .oc-head h
         const clearCanvas = document.getElementById('clearCanvas');
         const saveDrawing = document.getElementById('saveDrawing');
 
-        // Initialize canvas
+        // Tekenvlak: scherp op elk scherm, één streek per vinger, pen of muis (pointer events werken ook op iPad)
+        let dpr = 1;
         function initCanvas() {
-            const container = drawingCanvas.parentElement;
-            const rect = container.getBoundingClientRect();
-            drawingCanvas.width = rect.width;
-            drawingCanvas.height = 200;
+            const rect = drawingCanvas.getBoundingClientRect();
+            dpr = Math.max(1, Math.min(3, window.devicePixelRatio || 1));
+            drawingCanvas.width = Math.round(rect.width * dpr);
+            drawingCanvas.height = Math.round(rect.height * dpr);
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
             ctx.strokeStyle = '#10b981';
             ctx.lineWidth = 3;
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
         }
+        function clearPad() {
+            ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height); ctx.restore();
+        }
 
-        // Drawing functions
         function getPos(e) {
             const rect = drawingCanvas.getBoundingClientRect();
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-            return {
-                x: clientX - rect.left,
-                y: clientY - rect.top
-            };
+            return { x: e.clientX - rect.left, y: e.clientY - rect.top };
         }
 
-        let hasStroke = false;
-        function startDraw(e) {
-            isDrawing = true; hasStroke = true;
-            const pos = getPos(e);
-            lastX = pos.x;
-            lastY = pos.y;
-        }
-
-        function draw(e) {
-            if (!isDrawing) return;
+        let hasStroke = false, dirty = false, activePointer = null;
+        drawingCanvas.addEventListener('pointerdown', e => {
+            if (activePointer !== null) return;
             e.preventDefault();
-            const pos = getPos(e);
-            ctx.beginPath();
-            ctx.moveTo(lastX, lastY);
-            ctx.lineTo(pos.x, pos.y);
-            ctx.stroke();
-            lastX = pos.x;
-            lastY = pos.y;
-        }
-
-        function stopDraw() {
-            isDrawing = false;
-        }
-
-        drawingCanvas.addEventListener('mousedown', startDraw);
-        drawingCanvas.addEventListener('mousemove', draw);
-        drawingCanvas.addEventListener('mouseup', stopDraw);
-        drawingCanvas.addEventListener('mouseout', stopDraw);
-        drawingCanvas.addEventListener('touchstart', startDraw);
-        drawingCanvas.addEventListener('touchmove', draw);
-        drawingCanvas.addEventListener('touchend', stopDraw);
+            activePointer = e.pointerId;
+            try { drawingCanvas.setPointerCapture(e.pointerId); } catch (_) {}
+            isDrawing = true; hasStroke = true; dirty = true;
+            const pos = getPos(e); lastX = pos.x; lastY = pos.y;
+            ctx.beginPath(); ctx.arc(pos.x, pos.y, 1.5, 0, Math.PI * 2); ctx.fillStyle = '#10b981'; ctx.fill();
+        });
+        drawingCanvas.addEventListener('pointermove', e => {
+            if (!isDrawing || e.pointerId !== activePointer) return;
+            e.preventDefault();
+            const pts = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
+            (pts.length ? pts : [e]).forEach(pt => {
+                const pos = getPos(pt);
+                ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(pos.x, pos.y); ctx.stroke();
+                lastX = pos.x; lastY = pos.y;
+            });
+        });
+        const stopDraw = e => { if (e.pointerId !== activePointer) return; isDrawing = false; activePointer = null; };
+        drawingCanvas.addEventListener('pointerup', stopDraw);
+        drawingCanvas.addEventListener('pointercancel', stopDraw);
+        // Geen scrollen of zoomen terwijl je tekent (oudere Safari)
+        drawingCanvas.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
 
         // Modal functions
         function openDrawModal(step) {
@@ -1319,8 +1318,15 @@ header.header h1 + p, header.header h1 + p.subtitle, .oc-head h1 + p, .oc-head h
             drawModal.classList.add('active');
             initCanvas();
             modalClose.focus();
-            ctx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
-            hasStroke = false;
+            clearPad();
+            hasStroke = false; dirty = false;
+            // Al een tekening voor dit zintuig? Dan teken je er verder op.
+            const prev = drawings[stepToSense[step]][0];
+            if (prev) {
+                const img = new Image();
+                img.onload = () => { ctx.drawImage(img, 0, 0, drawingCanvas.clientWidth, drawingCanvas.clientHeight); hasStroke = true; };
+                img.src = prev;
+            }
         }
 
         function closeDrawModal() {
@@ -1335,29 +1341,35 @@ header.header h1 + p, header.header h1 + p.subtitle, .oc-head h1 + p, .oc-head h
 
         modalClose.addEventListener('click', closeDrawModal);
         clearCanvas.addEventListener('click', () => {
-            ctx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
-            hasStroke = false;
+            clearPad();
+            hasStroke = false; dirty = true;
         });
 
+        function setOtherChip(step) {
+            const chip = document.querySelector(`#chips${step} [data-other]`);
+            const d = drawings[stepToSense[step]][0];
+            chip.classList.toggle('selected', !!d);
+            chip.classList.toggle('has-drawing', !!d);
+            let img = chip.querySelector('.chip-thumb');
+            if (d) {
+                if (!img) { img = document.createElement('img'); img.className = 'chip-thumb'; img.alt = ''; chip.insertBefore(img, chip.firstChild); }
+                img.src = d;
+            } else if (img) img.remove();
+            const lbl = chip.querySelector('.chip-lbl'); if (lbl) lbl.textContent = d ? 'Tekening' : 'Andere';
+            chip.setAttribute('aria-label', d ? 'Jouw tekening: aanpassen' : 'Andere: zelf tekenen');
+            updateCounter(step);
+        }
+
         saveDrawing.addEventListener('click', () => {
-            if (!hasStroke) { closeDrawModal(); return; }   // niets getekend: niets bewaren
-            const dataUrl = drawingCanvas.toDataURL('image/png');
-            const sense = stepToSense[currentDrawingStep];
-            drawings[sense].push(dataUrl);
-            
-            // Update chip visually
-            const chipGrid = document.getElementById(`chips${currentDrawingStep}`);
-            const otherChip = chipGrid.querySelector('[data-other]');
-            otherChip.classList.add('selected');
-            
-            // Update counter
-            updateCounter(currentDrawingStep);
-            
+            const step = currentDrawingStep, sense = stepToSense[step];
+            if (!hasStroke) drawings[sense] = [];                       // leeg gemaakt: tekening weg
+            else drawings[sense] = [drawingCanvas.toDataURL('image/png')];
+            setOtherChip(step);
             closeDrawModal();
         });
 
         drawModal.addEventListener('click', (e) => {
-            if (e.target === drawModal) closeDrawModal();
+            if (e.target === drawModal && !dirty) closeDrawModal();   // niet per ongeluk een tekening kwijt
         });
 
         // Update counter
@@ -1397,15 +1409,8 @@ header.header h1 + p, header.header h1 + p.subtitle, .oc-head h1 + p, .oc-head h
                     chip.addEventListener('click', () => {
                         // Check if it's the "other" chip
                         if (chip.dataset.other) {
-                            if (!chip.classList.contains('selected')) {
-                                openDrawModal(step);
-                            } else {
-                                // Deselect and remove drawing
-                                chip.classList.remove('selected');
-                                const sense = stepToSense[step];
-                                drawings[sense] = [];
-                                updateCounter(step);
-                            }
+                            // Altijd het tekenvlak openen: verder tekenen of met Wissen en Klaar weghalen
+                            openDrawModal(step);
                             return;
                         }
                         
@@ -1564,6 +1569,7 @@ header.header h1 + p, header.header h1 + p.subtitle, .oc-head h1 + p, .oc-head h
         function reset() {
             responses = { see: [], hear: [], feel: [], smell: [], taste: [] };
             drawings = { see: [], hear: [], feel: [], smell: [], taste: [] };
+            for (let st = 1; st <= 5; st++) setOtherChip(st);
             
             // Clear all selections
             document.querySelectorAll('.chip').forEach(chip => {
