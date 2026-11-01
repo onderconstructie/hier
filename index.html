@@ -249,7 +249,7 @@
         }
 
         .step-count {
-            font-size: 0.6875rem;
+            font-size: 0.75rem;
             font-weight: 700;
             color: var(--accent);
             text-transform: uppercase;
@@ -657,7 +657,7 @@
             height: 18px;
             background: #047857;
             color: #ffffff;
-            font-size: 0.6875rem;
+            font-size: 0.75rem;
             font-weight: 700;
             border-radius: 50%;
             display: flex;
@@ -675,7 +675,7 @@
             transform: translateX(-50%);
             background: var(--slate-800);
             color: var(--white);
-            font-size: 0.6875rem;
+            font-size: 0.75rem;
             font-weight: 500;
             padding: 0.375rem 0.625rem;
             border-radius: 6px;
@@ -774,7 +774,7 @@
             transform: translateX(-50%);
             background: var(--slate-800);
             color: var(--white);
-            font-size: 0.6875rem;
+            font-size: 0.75rem;
             font-weight: 500;
             padding: 0.25rem 0.5rem;
             border-radius: 4px;
@@ -902,6 +902,17 @@ a, button, summary, select, label, [role="button"], [role="tab"] { touch-action:
 button:not(:disabled):active, summary:active, [role="button"]:active { filter: brightness(0.93); }
 dialog, [role="dialog"], [role="alertdialog"], .modal, .modal-backdrop { overscroll-behavior: contain; }
 html { -webkit-tap-highlight-color: transparent; }
+
+        /* Keuzetegels met zichtbare naam (geen zweeftekst nodig, ook op touch) */
+        .chip-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(4.5rem, 1fr)); gap:0.5rem; max-width:34rem; margin-left:auto; margin-right:auto; }
+        .chip { width:auto; height:auto; min-height:4.5rem; flex-direction:column; gap:0.3rem; padding:0.5rem 0.25rem; }
+        .chip-lbl { font-size:0.75rem; line-height:1.15; color:#475569; text-align:center; hyphens:auto; overflow-wrap:break-word; max-width:100%; }
+        .chip.selected .chip-lbl { color:#fff; }
+        .chip::after, .chip::before { display:none !important; }
+
+/* Voet altijd onderaan, ook op een hoog scherm (tablet): zoals in de andere tools */
+body { display:flex; flex-direction:column; }
+body > main { flex:1 0 auto; width:100%; }
 </style>
 </head>
 <body>
@@ -1364,6 +1375,8 @@ html { -webkit-tap-highlight-color: transparent; }
                     chip.setAttribute('tabindex', '0');
                     chip.setAttribute('aria-label', chip.dataset.other ? 'Andere: zelf tekenen' : chip.getAttribute('title'));
                     chip.setAttribute('aria-pressed', 'false');
+                    // Zichtbare naam onder elk prentje: op een tablet of gsm is er geen zweeftekst
+                    if (!chip.querySelector('.chip-lbl')) { const l = document.createElement('span'); l.className = 'chip-lbl'; l.setAttribute('aria-hidden', 'true'); l.textContent = chip.dataset.other ? 'Andere' : chip.getAttribute('title'); chip.appendChild(l); }
                     chip.addEventListener('keydown', e => {
                         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); chip.click(); }
                     });
