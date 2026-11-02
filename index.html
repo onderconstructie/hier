@@ -913,7 +913,7 @@ html { -webkit-tap-highlight-color: transparent; }
         /* Keuzetegels met zichtbare naam (geen zweeftekst nodig, ook op touch) */
         .chip-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(4.5rem, 1fr)); gap:0.5rem; max-width:34rem; margin-left:auto; margin-right:auto; }
         .chip { width:auto; height:auto; min-height:4.5rem; flex-direction:column; gap:0.3rem; padding:0.5rem 0.25rem; }
-        .chip-lbl { font-size:0.75rem; line-height:1.15; color:#475569; text-align:center; hyphens:auto; overflow-wrap:break-word; max-width:100%; }
+        .chip-lbl { font-size:0.75rem; line-height:1.15; color:#475569; text-align:center; hyphens:manual; overflow-wrap:normal; max-width:100%; }
         .chip.selected .chip-lbl { color:#fff; }
         .chip::after, .chip::before { display:none !important; }
 
@@ -934,6 +934,17 @@ header.header h1 + p, header.header h1 + p.subtitle, .oc-head h1 + p, .oc-head h
   header.header .back-link, .oc-head .back-link { position:static; display:flex; justify-content:center; margin:0 auto 0.75rem; width:max-content; }
   header.header .back-link span, .oc-head .back-link span { display:inline; }
 }
+
+/* Gebruikerstest november 2026: Volgende altijd in beeld op een gsm, namen in de samenvatting, rustige volgende stap */
+@media (max-width: 640px) {
+  .step-nav { position: sticky; bottom: 0; z-index: 5; background: linear-gradient(to bottom, rgba(255,255,255,0), #fff 0.75rem); padding: 1rem 0 calc(0.75rem + env(safe-area-inset-bottom, 0px)); margin-bottom: -0.75rem; }
+}
+.all-icon-item { width: auto; min-width: 56px; height: auto; min-height: 48px; padding: 6px 6px 5px; flex-direction: column; gap: 3px; }
+.all-icon-item img { width: 36px; height: 36px; }
+.all-icon-item::after { display: none; }
+.all-lbl { font-size: 0.6875rem; line-height: 1.15; color: #475569; text-align: center; max-width: 5.5rem; }
+.volgende-tool { text-align: center; margin: 1rem 0 0; font-size: 0.9375rem; }
+.volgende-tool a { color: #047857; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; display: inline-block; padding: 0.625rem 0.5rem; min-height: 44px; }
 </style>
 </head>
 <body>
@@ -1194,6 +1205,7 @@ header.header h1 + p, header.header h1 + p.subtitle, .oc-head h1 + p, .oc-head h
                         Opnieuw
                     </button>
                 </div>
+                <p class="volgende-tool"><a href="../adem/">Nog een minuut rustig ademen</a></p>
             </div>
         </div>
     </main>
@@ -1403,7 +1415,7 @@ header.header h1 + p, header.header h1 + p.subtitle, .oc-head h1 + p, .oc-head h
                     chip.setAttribute('aria-label', chip.dataset.other ? 'Andere: zelf tekenen' : chip.getAttribute('title'));
                     chip.setAttribute('aria-pressed', 'false');
                     // Zichtbare naam onder elk prentje: op een tablet of gsm is er geen zweeftekst
-                    if (!chip.querySelector('.chip-lbl')) { const l = document.createElement('span'); l.className = 'chip-lbl'; l.setAttribute('aria-hidden', 'true'); l.textContent = chip.dataset.other ? 'Andere' : chip.getAttribute('title'); chip.appendChild(l); }
+                    if (!chip.querySelector('.chip-lbl')) { const l = document.createElement('span'); l.className = 'chip-lbl'; l.setAttribute('aria-hidden', 'true'); l.textContent = chip.dataset.other ? 'Andere' : afbreek(chip.getAttribute('title')); chip.appendChild(l); }
                     chip.addEventListener('keydown', e => {
                         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); chip.click(); }
                     });
@@ -1448,6 +1460,10 @@ header.header h1 + p, header.header h1 + p.subtitle, .oc-head h1 + p, .oc-head h
                 svg: c.querySelector('svg').outerHTML
             }));
         }
+
+        // Lange woorden op een smalle tegel netjes afbreken (zachte koppeltekens), nooit midden in een lettergreep
+        const AFBREEK = { Ademhaling:'Adem\u00adhaling', Chocolade:'Choco\u00adlade', Frisdrank:'Fris\u00addrank', Schoonmaak:'Schoon\u00admaak', Tandpasta:'Tand\u00adpasta', Toetsenbord:'Toetsen\u00adbord', Ventilator:'Venti\u00adlator', Voetstappen:'Voet\u00adstappen', Wasmiddel:'Was\u00admiddel' };
+        function afbreek(t) { return AFBREEK[t] || t; }
 
         // Generate summary
         function generateSummary() {
@@ -1513,11 +1529,11 @@ header.header h1 + p, header.header h1 + p.subtitle, .oc-head h1 + p, .oc-head h
             let gridHtml = allItems.map((item, index) => {
                 if (item.isDrawing) {
                     return `<div class="all-icon-item show-all" data-sense="${item.sense}" data-label="${item.title}" data-index="${index}">
-                        <img src="${item.dataUrl}" alt="Tekening">
+                        <img src="${item.dataUrl}" alt="Tekening"><span class="all-lbl">Tekening</span>
                     </div>`;
                 }
                 return `<div class="all-icon-item show-all" data-sense="${item.sense}" data-label="${item.title}" data-index="${index}">
-                    ${item.svg}
+                    ${item.svg}<span class="all-lbl">${afbreek(item.title)}</span>
                 </div>`;
             }).join('');
 
