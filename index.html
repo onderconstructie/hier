@@ -3,6 +3,20 @@
 <head>
     <meta charset="UTF-8">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' data: blob:; worker-src 'self' blob:; frame-src 'self' blob: data:; object-src 'none'; base-uri 'self'; form-action 'self'">
+<!-- oc-delen -->
+<link rel="canonical" href="https://onderconstructie.app/hier/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Onder Constructie">
+<meta property="og:locale" content="nl_BE">
+<meta property="og:title" content="Hier &amp; Nu · Onder Constructie">
+<meta property="og:description" content="Kom even tot rust door stil te staan bij wat je nu ziet, hoort, voelt, ruikt en proeft. Je kiest telkens wat je opmerkt.">
+<meta property="og:url" content="https://onderconstructie.app/hier/">
+<meta property="og:image" content="https://onderconstructie.app/og/hier.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Hier &amp; Nu. Tot rust komen via wat je ziet, hoort en voelt">
+<meta name="twitter:card" content="summary_large_image">
+<!-- /oc-delen -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="light">
     <meta name="theme-color" content="#ffffff">
@@ -251,7 +265,7 @@
         }
 
         .step-count {
-            font-size: 0.75rem;
+            font-size:0.8125rem;
             font-weight: 700;
             color: var(--accent);
             text-transform: uppercase;
@@ -332,7 +346,7 @@
             transform: translateX(-50%);
             background: var(--slate-800);
             color: var(--white);
-            font-size: 0.75rem;
+            font-size:0.8125rem;
             font-weight: 500;
             padding: 0.375rem 0.625rem;
             border-radius: 6px;
@@ -665,7 +679,7 @@
             height: 18px;
             background: #0c8660;
             color: #ffffff;
-            font-size: 0.75rem;
+            font-size:0.8125rem;
             font-weight: 700;
             border-radius: 50%;
             display: flex;
@@ -683,7 +697,7 @@
             transform: translateX(-50%);
             background: var(--slate-800);
             color: var(--white);
-            font-size: 0.75rem;
+            font-size:0.8125rem;
             font-weight: 500;
             padding: 0.375rem 0.625rem;
             border-radius: 6px;
@@ -704,7 +718,7 @@
         /* Instructie tekst */
         .sense-hint {
             text-align: center;
-            font-size: 0.75rem;
+            font-size:0.8125rem;
             color: var(--slate-500);
             margin-bottom: 1rem;
         }
@@ -782,7 +796,7 @@
             transform: translateX(-50%);
             background: var(--slate-800);
             color: var(--white);
-            font-size: 0.75rem;
+            font-size:0.8125rem;
             font-weight: 500;
             padding: 0.25rem 0.5rem;
             border-radius: 4px;
@@ -914,7 +928,7 @@ html { -webkit-tap-highlight-color: transparent; }
         /* Keuzetegels met zichtbare naam (geen zweeftekst nodig, ook op touch) */
         .chip-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(4.5rem, 1fr)); gap:0.5rem; max-width:34rem; margin-left:auto; margin-right:auto; }
         .chip { width:auto; height:auto; min-height:4.5rem; flex-direction:column; gap:0.3rem; padding:0.5rem 0.25rem; }
-        .chip-lbl { font-size:0.75rem; line-height:1.15; color:#475569; text-align:center; hyphens:manual; overflow-wrap:normal; max-width:100%; }
+        .chip-lbl { font-size:0.8125rem; line-height:1.15; color:#475569; text-align:center; hyphens:manual; overflow-wrap:normal; max-width:100%; }
         .chip.selected .chip-lbl { color:#fff; }
         .chip::after, .chip::before { display:none !important; }
 
@@ -943,7 +957,7 @@ header.header h1 + p, header.header h1 + p.subtitle, .oc-head h1 + p, .oc-head h
 .all-icon-item { width: auto; min-width: 56px; height: auto; min-height: 48px; padding: 6px 6px 5px; flex-direction: column; gap: 3px; }
 .all-icon-item img { width: 36px; height: 36px; }
 .all-icon-item::after { display: none; }
-.all-lbl { font-size: 0.6875rem; line-height: 1.15; color: #475569; text-align: center; max-width: 5.5rem; }
+.all-lbl { font-size:0.8125rem; line-height: 1.15; color: #475569; text-align: center; max-width: 5.5rem; }
 .volgende-tool { text-align: center; margin: 1rem 0 0; font-size: 0.9375rem; }
 .volgende-tool a { color: #047857; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; display: inline-block; padding: 0.625rem 0.5rem; min-height: 44px; }
 /* Eenheid: vaste breedte voor de inhoud onder de kop (smal 720 px of breed 1200 px) */
@@ -1308,7 +1322,7 @@ details.explain.oc-u[open] .oc-u-pijl { transform:rotate(180deg); background:var
 
 /* op brede schermen: de stappen als kleine route, die plaats maakt voor de echte stappen bij openen */
 details.explain.oc-u .oc-u-route { display:none; align-items:center; flex-shrink:0; margin-right:0.75rem; transition:opacity 0.25s, visibility 0.25s; }
-details.explain.oc-u .oc-u-route i { position:relative; display:flex; align-items:center; justify-content:center; width:26px; height:26px; margin-left:16px; border-radius:50%; border:1.5px solid var(--u-licht); background:#ffffff; color:var(--u-donker); font-style:normal; font-size:0.75rem; font-weight:700; line-height:1; font-variant-numeric:tabular-nums; transition:border-color 0.2s, background-color 0.2s; }
+details.explain.oc-u .oc-u-route i { position:relative; display:flex; align-items:center; justify-content:center; width:26px; height:26px; margin-left:16px; border-radius:50%; border:1.5px solid var(--u-licht); background:#ffffff; color:var(--u-donker); font-style:normal; font-size:0.8125rem; font-weight:700; line-height:1; font-variant-numeric:tabular-nums; transition:border-color 0.2s, background-color 0.2s; }
 details.explain.oc-u .oc-u-route i:first-child { margin-left:0; }
 details.explain.oc-u .oc-u-route i + i::before { content:''; position:absolute; right:calc(100% + 1.5px); top:calc(50% - 0.75px); width:16px; height:1.5px; background:var(--u-licht); }
 details.explain.oc-u > summary:hover .oc-u-route i { border-color:var(--u-groen); }
@@ -1869,7 +1883,7 @@ main > details.explain { display:block; width:100%; max-width:40rem; margin:2rem
 
     <footer class="footer oc-footer">
         <p class="quote oc-quote">Kijk, luister, en laat de rest even wachten.</p>
-        <p class="oc-medisch" style="font-size:0.75rem;color:#64748b;margin:0.5rem auto 0;max-width:30rem;line-height:1.5;text-align:center">Dit is geen medische behandeling of diagnose. Heb je klachten, zoek dan hulp via je huisarts of een psycholoog.</p>
+        <p class="oc-medisch" style="font-size:0.8125rem;color:#64748b;margin:0.5rem auto 0;max-width:30rem;line-height:1.5;text-align:center">Dit is geen medische behandeling of diagnose. Heb je klachten, zoek dan hulp via je huisarts of een psycholoog.</p>
     </footer>
 
     <!-- Drawing Modal -->
